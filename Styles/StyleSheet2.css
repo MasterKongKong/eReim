@@ -1,0 +1,26 @@
+﻿.label20
+{
+    font-size: 20px;
+}
+.label15
+{
+    font-size: 15px;
+}
+#ext-gen33 .x-grid3-cell
+{
+    border-color: #000000 !important;
+    border-style: solid !important;
+    border-width: 1px !important;
+}
+#ext-gen33 .x-grid3-row td, .x-grid3-summary-row td
+{
+    -moz-user-select: none;
+    line-height: 13px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    vertical-align: top;
+}
+.ToolTipTitle
+{
+    font-size: 12px;
+}

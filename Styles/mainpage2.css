@@ -1,0 +1,256 @@
+﻿body, h1, h2, h3, h4, h5, h6, dl, dt, dd, ul, ol, li, th, td, p, blockquote, pre, form, fieldset, legend, input, button, textarea, hr
+{
+    margin: 0;
+    padding: 0;
+}
+li
+{
+    list-style: none outside none;
+}
+.W_miniblog /*页面全体*/ /*页面全体*/
+{
+    padding-top: 60px;
+    min-width: 980px;
+}
+.W_miniblog_print
+{
+    padding-top: 15px;
+    min-width: 980px;
+}
+.W_main
+{
+    margin: 0 auto 15px;
+    width: 980px;
+}
+.W_main_print
+{
+    margin: 0 10px;
+    width: 748px;
+}
+.WB_global_nav /*页面顶端*/
+{
+    background-image: url('../Images/bar3FA7CB_80.png');
+    box-shadow: 0 1px 3px 0 #000000;
+    height: 39px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2000;
+}
+.gn_header /*页面顶端的文本部分*/
+{
+    margin: 0 auto;
+    position: relative;
+    width: 850px;
+}
+.gn_header a
+{
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.gn_nav
+{
+    float: left;
+    margin: auto 0;
+}
+.gn_title
+{
+    float: left;
+    font-size: 18px;
+    position: relative;
+    line-height: 39px;
+    font-weight: bold;
+}
+.gn_title a
+{
+    display: block;
+    padding: 0 0;
+    cursor: pointer;
+    color: #FFFFFF;
+    float: left;
+}
+.gn_center .q-menubox .q-menuitem a:hover
+{
+    background: none repeat scroll 0 0 #E2F7FF;
+    transition: color 0.15s linear 0s, background-color 0.3s linear 0s;
+    color: #333333;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.gn_center_select
+{
+    background: #0099FF none repeat scroll 0 0;
+    transition: color 0.15s linear 0s, background-color 0.3s linear 0s;
+    color: #333333;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.gn_setting
+{
+    float: left;
+    max-width: 195px;
+    position: relative;
+    margin-right: 50px;
+    font-size: 12px;
+    line-height: 39px;
+}
+.gn_person
+{
+    float: right;
+    height: 39px;
+}
+.gn_topmenulist_notice
+{
+    width: 150px;
+}
+.gn_topmenulist_set, .gn_topmenulist_notice
+{
+    line-height: 20px;
+    color: #333333;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-top-left-radius: 6px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    right: 0;
+    top: 39px;
+    width: 138px;
+}
+.gn_topmenulist, .gn_topmenulist .S_txt1, .gn_topmenulist .SW_fun .S_func1, .gn_topmenulist .S_func1
+{
+    color: #333333;
+}
+.gn_topmenulist
+{
+    background: none repeat scroll 0 0 #E2F7FF;
+    border: none;
+    font-size: 12px;
+    padding: 5px 0 0;
+    position: absolute;
+    z-index: 2000;
+}
+.gn_topmenulist .gn_text_list li
+{
+    height: 26px;
+    line-height: 26px;
+}
+.gn_topmenulist a
+{
+    color: #333333;
+    display: block;
+    padding: 0 15px;
+}
+.gn_topmenulist a:hover
+{
+    background: none repeat scroll 0 0 #CCCCCC;
+    transition: color 0.15s linear 0s, background-color 0.3s linear 0s;
+    cursor: pointer;
+}
+.gn_msg a
+{
+    display: block;
+    padding: 0 20px;
+}
+.gn_msg a:hover
+{
+    background: none repeat scroll 0 0 #E2F7FF;
+    color: #333333;
+    cursor: pointer;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.hoverclass
+{
+    background: none repeat scroll 0 0 #E2F7FF;
+    transition: color 0.15s linear 0s, background-color 0.3s linear 0s;
+    color: #333333 !important;
+    cursor: pointer;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.gn_center
+{
+    float: left;
+    height: 39px;
+    margin-left: 15px;
+}
+.gn_center .q-menubox
+{
+    float: left;
+    height: 100%;
+}
+.gn_center .q-menuitem
+{
+    float: left;
+    font-size: 14px;
+    height: 100%;
+    line-height: 39px;
+    text-align: center;
+}
+.gn_person .q-menuitem
+{
+    float: left;
+    font-size: 12px;
+    height: 100%;
+    line-height: 39px;
+    text-align: center;
+}
+.gn_center .q-menubox .q-menuitem a
+{
+    color: #FFFFFF;
+    display: block;
+    padding: 0 10px;
+}
+.gn_person .q-menubox .q-menuitem a
+{
+    color: #FFFFFF;
+    display: block;
+    padding: 0 5px;
+}
+.gn_person .q-menubox .q-menuitem a
+{
+    color: #C0EEFF;
+}
+.gn_person .q-menubox .q-menuitem a:hover
+{
+    color: #F2F2F2;
+}
+.q-navitem
+{
+    float: left;
+    line-height: 39px;
+    text-align: center;
+}
+.q-navitem span
+{
+    border-right: 1px solid #52B8DA;
+    display: block;
+    float: left;
+    font-size: 12px;
+    height: 12px;
+    line-height: 12px;
+    margin-top: 15px;
+}
+.x-panel-header-text a
+{
+    color: #FF0000;
+    font-size: 14px;
+    position: absolute;
+    top: 5px;
+}
+.x-window-tl .x-window-header
+{
+    color: #15428B;
+    font: bold 12px tahoma,arial,verdana,sans-serif !important;
+}
+.x-window-mc
+{
+    font: 12px tahoma,arial,helvetica,sans-serif;
+}
+.x-panel-mc
+{
+    font: 12px tahoma,arial,helvetica,sans-serif !important;
+}
+

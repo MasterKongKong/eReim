@@ -1,0 +1,33 @@
+﻿.li1
+{
+    padding: 10px;
+    margin: 0px;
+    float: left;
+    list-style-type: none;
+    width: 130px;
+}
+.ul1
+{
+    padding: 10px;
+    margin: 0px;
+}
+.divMain
+{
+    width: 900px;
+}
+.Pending
+{
+    background-color: #F2F2F2;
+}
+.Approve
+{
+    background-color: #00CC00;
+}
+.Reject
+{
+    background-color: #FFC000;
+}
+.Complete
+{
+    background-color: #66CCFF;
+}

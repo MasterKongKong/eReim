@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ext.Net.MVC</name>
+    </assembly>
+    <members>
+        <member name="P:Ext.Net.MVC.AjaxFormResult.ConfigOptionsExtraction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Ext.Net.MVC.FieldError.ConfigOptionsExtraction">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

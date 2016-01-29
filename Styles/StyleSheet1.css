@@ -1,0 +1,52 @@
+﻿.iconnone
+{
+    background-image: none;
+}
+.x-panel-header
+{
+    background: transparent !important;
+    background-color: #D0DEF0 !important;
+}
+.x-tab-strip-inner span
+{
+    font-size: 12px !important;
+}
+/*
+        #Panel1 .x-tab-panel-body
+        {
+            border: none !important;
+        }*/
+.budgetfont
+{
+    color: Blue;
+}
+.cbStates-list
+{
+    width: 448px;
+}
+
+.cbStates-list th
+{
+    font-weight: bold;
+}
+
+.cbStates-list td, .cbStates-list th
+{
+    padding: 3px;
+}
+.UploadLabel
+{
+    color: Red;
+}
+.sum
+{
+    color: #000000;
+}
+#txtSum, #txtPersonalSum, #txtCompanySum
+{
+    color: #FF8000;
+}
+/*.x-tree-node-icon
+{
+    display: none;
+}*/

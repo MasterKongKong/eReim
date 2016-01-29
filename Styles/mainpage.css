@@ -1,0 +1,217 @@
+﻿html
+{
+    overflow: auto;
+}
+body
+{
+    font: 12px tahoma,arial,helvetica,sans-serif;
+}
+.x-grid3-hd-row td
+{
+    font: 12px/15px arial,tahoma,helvetica,sans-serif !important;
+}
+.x-grid3-row td, .x-grid3-summary-row td
+{
+    font: 12px/13px arial,tahoma,helvetica,sans-serif !important;
+}
+#baiduSpaceLogo
+{
+    background: transparent url('../images/Dimerco2.gif') no-repeat scroll left top;
+    display: block;
+    height: 30px;
+    width: 200px;
+}
+#dimercologo
+{
+    font-size: 24px;
+    line-height: 50px;
+    text-align: center;
+    color: #FFFFFF;
+    display: block;
+    padding: 0 20px;
+}
+.mod-footer .footer-box .copy-box
+{
+    color: #959595;
+    height: 14px;
+    line-height: 14px;
+    overflow: hidden;
+}
+
+.mod-footer
+{
+    clear: both;
+    height: 15px;
+    margin-top: -55px;
+    padding-top: 20px;
+    position: relative;
+    width: 100%;
+}
+.tdtrans1
+{
+    width: 100px;
+}
+.thtrans1
+{
+    height: 30px;
+    text-align: left;
+}
+.settingPlace
+{
+    margin-top: 20px;
+}
+.mod-page-body .mod-page-main
+{
+    padding-top: 80px;
+    padding-bottom: 50px;
+}
+.topbar2
+{
+    height: 30px !important;
+}
+.topbar2-line
+{
+    line-height: 30px !important;
+}
+.topbar-crossline
+{
+    border-bottom: 1px solid #3399FF;
+}
+.topbar2-margin
+{
+    margin-left: 0px !important;
+}
+
+.x-panel-header, .x-tree-node
+{
+    font-size: 12px !important;
+}
+.x-tree-node
+{
+    font-size: 14px !important;
+}
+.x-btn button
+{
+    font: 12px tahoma,helvetica, "microsoft yahei" ,arial !important;
+}
+
+.StatusIconS
+{
+    background-color: #9DBB61;
+    border-radius: 12px 12px 12px 12px;
+    border: 1px solid #E1E1E1 !important;
+    font-family: tahoma,helvetica, "microsoft yahei" ,arial !important;
+    font-size: 12px !important;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 50px;
+    margin: 10px 0;
+    float:left;
+}
+.StatusIconE
+{
+    background-color: #F2F2F2;
+    border-radius: 12px 12px 12px 12px;
+    border: 1px solid #E1E1E1 !important;
+    font-family: tahoma,helvetica, "microsoft yahei" ,arial !important;
+    font-size: 12px !important;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 8px;
+    line-height: 50px;
+    margin-top: 10px;
+    float:left;
+}
+.StatusIcon
+{
+    border-radius: 12px 12px 12px 12px;
+    border: 1px solid #E1E1E1 !important;
+    font-family: tahoma,helvetica, "microsoft yahei" ,arial !important;
+    font-size: 12px !important;
+    height: 70px;
+    width: 100px;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 8px;
+    float:left;
+}
+.StatusIcon0
+{
+    background-color: #9DBB61;
+}
+.StatusIcon1
+{
+    background-color: #FFC000;
+}
+.StatusIcon2
+{
+    background-color: #F2F2F2;
+}
+.spanIcon, .bIcon
+{
+    display: inline-block;
+    vertical-align: middle;
+    color: #000000;
+}
+.bIcon1
+{
+    height: 100%;
+}
+.Icon0
+{
+    background-color: #9DBB61;
+    border-radius: 6px 6px 6px 6px;
+    border: 1px solid #E1E1E1 !important;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.Icon1
+{
+    background-color: #FFC000;
+    border-radius: 6px 6px 6px 6px;
+    border: 1px solid #E1E1E1 !important;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.Icon2
+{
+    background-color: Red;
+    border-radius: 6px 6px 6px 6px;
+    border: 1px solid #E1E1E1 !important;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.Icon3
+{
+    background-color: #F2F2F2;
+    border-radius: 6px 6px 6px 6px;
+    border: 1px solid #E1E1E1 !important;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.Icon0text
+{
+    height: 20px;
+    width: 90px;
+    float: left;
+    color: #000000;
+    font: 14px tahoma,helvetica, "microsoft yahei" ,arial !important;
+    margin-top: 12px;
+    margin-left: 10px;
+}

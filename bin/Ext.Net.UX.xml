@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ext.Net.UX</name>
+    </assembly>
+    <members>
+        <member name="T:Ext.Net.UX.InputTextMask">
+            It creates a new input text mask.
+             @class InputTextMask is a plugin for Ext.form.TextField, used to add an input mask to the field.
+             Mask Individual Character Usage:
+             
+             9 - designates only numeric values
+             L - designates only uppercase letter values
+             l - designates only lowercase letter values
+             A - designates only alphanumeric values
+             X - denotes that a custom client script regular expression is specified
+            
+             All other characters are assumed to be "special" characters used to mask the input component.
+             Example 1:
+                (999)999-9999 only numeric values can be entered where the the character
+                position value is 9. Parenthesis and dash are non-editable/mask characters.
+             Example 2:
+                99L-ll-X[^A-C]X only numeric values for the first two characters,
+                uppercase values for the third character, lowercase letters for the
+                fifth/sixth characters, and the last character X[^A-C]X together counts
+                as the eighth character regular expression that would allow all characters
+                but "A", "B", and "C". Dashes outside the regular expression are non-editable/mask characters.
+        </member>
+        <member name="P:Ext.Net.UX.MarkerListeners.Click">
+            <summary>
+            Fires when this marker is clicked.
+            </summary>
+        </member>
+    </members>
+</doc>

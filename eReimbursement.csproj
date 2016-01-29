@@ -1,0 +1,713 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{99C87129-BB78-4AE2-8D80-11939832107E}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>eReimbursement</RootNamespace>
+    <AssemblyName>eReimbursement</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DIMERCO.SDK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=886ddbd4889237da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DIMERCO.SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Ext.Net, Version=1.6.0.213, Culture=neutral, PublicKeyToken=2e12ce3d0176cd87, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Ext.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Ext.Net.Utilities, Version=1.3.0.39155, Culture=neutral, PublicKeyToken=2c34ac34702a3c23, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Ext.Net.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.4.0.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Data, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Microsoft.Practices.EnterpriseLibrary.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ObjectBuilder, Version=1.0.51206.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Microsoft.Practices.ObjectBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="org.in2bits.MyXls, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\org.in2bits.MyXls.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Agent.aspx" />
+    <Content Include="Apply.aspx" />
+    <Content Include="ApplyC.aspx" />
+    <Content Include="ApplyCC.aspx" />
+    <Content Include="ApplyE.aspx" />
+    <Content Include="ApplyEE.aspx" />
+    <Content Include="ApplyO.aspx" />
+    <Content Include="ApplyOO.aspx" />
+    <Content Include="ApplyT.aspx" />
+    <Content Include="ApplyTravelT.aspx" />
+    <Content Include="ApplyTT.aspx" />
+    <Content Include="Approve.aspx" />
+    <Content Include="ApproveDG.aspx" />
+    <Content Include="ApproveG.aspx" />
+    <Content Include="App_Code\BasePage.aspx" />
+    <Content Include="backup\mailtest.aspx" />
+    <Content Include="backup\WebForm1.aspx" />
+    <Content Include="Budget.aspx" />
+    <Content Include="BudgetDetail.aspx" />
+    <Content Include="BudgetEmail.aspx" />
+    <Content Include="BudgetReport.aspx" />
+    <Content Include="BudgetSet.aspx" />
+    <Content Include="BudgetUpload.aspx" />
+    <Content Include="Charge.aspx" />
+    <Content Include="ClaimPreview.aspx" />
+    <Content Include="CuySet.aspx" />
+    <Content Include="eFMSAccount.aspx" />
+    <Content Include="eFMSTrans.aspx" />
+    <Content Include="ereim.htm" />
+    <Content Include="Error.aspx" />
+    <Content Include="Excel.xsl" />
+    <Content Include="ExchangeRate.aspx" />
+    <Content Include="ExtTwoGrids.aspx" />
+    <Content Include="FileManagement.aspx" />
+    <Content Include="eFMS.aspx" />
+    <Content Include="FileSetting.aspx" />
+    <Content Include="Grid_and_Store_Reconfigure.aspx" />
+    <Content Include="HTML.aspx" />
+    <Content Include="HTML1.aspx" />
+    <Content Include="HTML2.aspx" />
+    <Content Include="HtmlTest1.aspx" />
+    <Content Include="Images\1.png" />
+    <Content Include="Images\bar.png" />
+    <Content Include="Images\bar3FA7CB.png" />
+    <Content Include="Images\bar3FA7CB_60.png" />
+    <Content Include="Images\bar3FA7CB_70.png" />
+    <Content Include="Images\bar3FA7CB_80.png" />
+    <Content Include="Images\bg1.jpg" />
+    <Content Include="Images\bg_nav.png" />
+    <Content Include="Images\eReim.png" />
+    <Content Include="MailSetting.aspx" />
+    <Content Include="MyClaims.aspx" />
+    <Content Include="MyDrafts.aspx" />
+    <Content Include="Preview.aspx" />
+    <Content Include="Profile.aspx" />
+    <Content Include="Role.aspx" />
+    <Content Include="RoleModule.aspx" />
+    <Content Include="RolePage.aspx" />
+    <Content Include="RoleSet.aspx" />
+    <Content Include="RoleStation.aspx" />
+    <Content Include="RoleUser.aspx" />
+    <Content Include="Scripts\jquery-1.9.0.min.js" />
+    <Content Include="Scripts\PageJS.js" />
+    <Content Include="Scripts\pagesetting.js" />
+    <None Include="Service References\ServiceReference1\BudgetApplication1.disco" />
+    <Content Include="Test.aspx" />
+    <Content Include="Welcome.aspx" />
+    <None Include="App_Code\DataSet1.xsc">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="App_Code\DataSet1.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="App_Code\DataSet1.xss">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="eReimbursementDataSet.xsc">
+      <DependentUpon>eReimbursementDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="eReimbursementDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>eReimbursementDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="eReimbursementDataSet.xss">
+      <DependentUpon>eReimbursementDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Properties\DataSources\System.Data.DataSet.datasource" />
+    <None Include="Service References\ServiceReference1\BudgetApplication1.wsdl" />
+    <None Include="Service References\ServiceReference1\configuration91.svcinfo" />
+    <None Include="Service References\ServiceReference1\configuration.svcinfo" />
+    <None Include="Service References\ServiceReference1\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Styles\examples.css" />
+    <Content Include="Styles\mainpage.css" />
+    <Content Include="Styles\mainpage2.css" />
+    <Content Include="Styles\Site.css" />
+    <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.4.1.js" />
+    <Content Include="Scripts\jquery-1.4.1.min.js" />
+    <Content Include="Styles\StyleSheet1.css" />
+    <Content Include="Styles\StyleSheet2.css" />
+    <Content Include="Styles\StyleSheetFlow.css" />
+    <Content Include="Travel.aspx" />
+    <Content Include="UserBD.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="WebForm1.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Agent.aspx.cs">
+      <DependentUpon>Agent.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Agent.aspx.designer.cs">
+      <DependentUpon>Agent.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Apply.aspx.cs">
+      <DependentUpon>Apply.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Apply.aspx.designer.cs">
+      <DependentUpon>Apply.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyC.aspx.cs">
+      <DependentUpon>ApplyC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyC.aspx.designer.cs">
+      <DependentUpon>ApplyC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyCC.aspx.cs">
+      <DependentUpon>ApplyCC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyCC.aspx.designer.cs">
+      <DependentUpon>ApplyCC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyE.aspx.cs">
+      <DependentUpon>ApplyE.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyE.aspx.designer.cs">
+      <DependentUpon>ApplyE.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyEE.aspx.cs">
+      <DependentUpon>ApplyEE.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyEE.aspx.designer.cs">
+      <DependentUpon>ApplyEE.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyO.aspx.cs">
+      <DependentUpon>ApplyO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyO.aspx.designer.cs">
+      <DependentUpon>ApplyO.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyOO.aspx.cs">
+      <DependentUpon>ApplyOO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyOO.aspx.designer.cs">
+      <DependentUpon>ApplyOO.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyT.aspx.cs">
+      <DependentUpon>ApplyT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyT.aspx.designer.cs">
+      <DependentUpon>ApplyT.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyTravelT.aspx.cs">
+      <DependentUpon>ApplyTravelT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyTravelT.aspx.designer.cs">
+      <DependentUpon>ApplyTravelT.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyTT.aspx.cs">
+      <DependentUpon>ApplyTT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyTT.aspx.designer.cs">
+      <DependentUpon>ApplyTT.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Approve.aspx.cs">
+      <DependentUpon>Approve.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Approve.aspx.designer.cs">
+      <DependentUpon>Approve.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApproveDG.aspx.cs">
+      <DependentUpon>ApproveDG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApproveDG.aspx.designer.cs">
+      <DependentUpon>ApproveDG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApproveG.aspx.cs">
+      <DependentUpon>ApproveG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApproveG.aspx.designer.cs">
+      <DependentUpon>ApproveG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Code\BasePage.aspx.cs">
+      <DependentUpon>BasePage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Code\BasePage.aspx.designer.cs">
+      <DependentUpon>BasePage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="cs\ZipFloClass.cs" />
+    <Compile Include="Error.aspx.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error.aspx.designer.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FileSetting.aspx.cs">
+      <DependentUpon>FileSetting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FileSetting.aspx.designer.cs">
+      <DependentUpon>FileSetting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MailSetting.aspx.cs">
+      <DependentUpon>MailSetting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MailSetting.aspx.designer.cs">
+      <DependentUpon>MailSetting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Test.aspx.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Test.aspx.designer.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Welcome.aspx.cs">
+      <DependentUpon>Welcome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Welcome.aspx.designer.cs">
+      <DependentUpon>Welcome.aspx</DependentUpon>
+    </Compile>
+    <Content Include="App_Code\Data.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Data.xsd</DependentUpon>
+    </Content>
+    <Compile Include="App_Code\Comm.cs" />
+    <Content Include="App_Code\DataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </Content>
+    <Compile Include="App_Code\DB.cs" />
+    <Compile Include="App_GlobalResources\LocalText.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalText.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\LocalText.zh-CN.designer.cs">
+      <DependentUpon>LocalText.zh-CN.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="backup\mailtest.aspx.cs">
+      <DependentUpon>mailtest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="backup\mailtest.aspx.designer.cs">
+      <DependentUpon>mailtest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="backup\WebForm1.aspx.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="backup\WebForm1.aspx.designer.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Budget.aspx.cs">
+      <DependentUpon>Budget.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Budget.aspx.designer.cs">
+      <DependentUpon>Budget.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BudgetDetail.aspx.cs">
+      <DependentUpon>BudgetDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BudgetDetail.aspx.designer.cs">
+      <DependentUpon>BudgetDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BudgetEmail.aspx.cs">
+      <DependentUpon>BudgetEmail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BudgetEmail.aspx.designer.cs">
+      <DependentUpon>BudgetEmail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BudgetReport.aspx.cs">
+      <DependentUpon>BudgetReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BudgetReport.aspx.designer.cs">
+      <DependentUpon>BudgetReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BudgetSet.aspx.cs">
+      <DependentUpon>BudgetSet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BudgetSet.aspx.designer.cs">
+      <DependentUpon>BudgetSet.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BudgetUpload.aspx.cs">
+      <DependentUpon>BudgetUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BudgetUpload.aspx.designer.cs">
+      <DependentUpon>BudgetUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Charge.aspx.cs">
+      <DependentUpon>Charge.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Charge.aspx.designer.cs">
+      <DependentUpon>Charge.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClaimPreview.aspx.cs">
+      <DependentUpon>ClaimPreview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClaimPreview.aspx.designer.cs">
+      <DependentUpon>ClaimPreview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="cs\DBCommand.cs" />
+    <Compile Include="CuySet.aspx.cs">
+      <DependentUpon>CuySet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CuySet.aspx.designer.cs">
+      <DependentUpon>CuySet.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="eFMSAccount.aspx.cs">
+      <DependentUpon>eFMSAccount.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="eFMSAccount.aspx.designer.cs">
+      <DependentUpon>eFMSAccount.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="eFMSTrans.aspx.cs">
+      <DependentUpon>eFMSTrans.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="eFMSTrans.aspx.designer.cs">
+      <DependentUpon>eFMSTrans.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="eReimbursementDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>eReimbursementDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ExchangeRate.aspx.cs">
+      <DependentUpon>ExchangeRate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ExchangeRate.aspx.designer.cs">
+      <DependentUpon>ExchangeRate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ExtTwoGrids.aspx.cs">
+      <DependentUpon>ExtTwoGrids.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ExtTwoGrids.aspx.designer.cs">
+      <DependentUpon>ExtTwoGrids.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FileManagement.aspx.cs">
+      <DependentUpon>FileManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FileManagement.aspx.designer.cs">
+      <DependentUpon>FileManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="eFMS.aspx.cs">
+      <DependentUpon>eFMS.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="eFMS.aspx.designer.cs">
+      <DependentUpon>eFMS.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Grid_and_Store_Reconfigure.aspx.cs">
+      <DependentUpon>Grid_and_Store_Reconfigure.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Grid_and_Store_Reconfigure.aspx.designer.cs">
+      <DependentUpon>Grid_and_Store_Reconfigure.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HTML.aspx.cs">
+      <DependentUpon>HTML.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HTML.aspx.designer.cs">
+      <DependentUpon>HTML.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HTML1.aspx.cs">
+      <DependentUpon>HTML1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HTML1.aspx.designer.cs">
+      <DependentUpon>HTML1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HTML2.aspx.cs">
+      <DependentUpon>HTML2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HTML2.aspx.designer.cs">
+      <DependentUpon>HTML2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HtmlTest1.aspx.cs">
+      <DependentUpon>HtmlTest1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HtmlTest1.aspx.designer.cs">
+      <DependentUpon>HtmlTest1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MyClaims.aspx.cs">
+      <DependentUpon>MyClaims.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MyClaims.aspx.designer.cs">
+      <DependentUpon>MyClaims.aspx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyDrafts.aspx.cs">
+      <DependentUpon>MyDrafts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MyDrafts.aspx.designer.cs">
+      <DependentUpon>MyDrafts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Preview.aspx.cs">
+      <DependentUpon>Preview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Preview.aspx.designer.cs">
+      <DependentUpon>Preview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Profile.aspx.cs">
+      <DependentUpon>Profile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Profile.aspx.designer.cs">
+      <DependentUpon>Profile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Role.aspx.cs">
+      <DependentUpon>Role.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Role.aspx.designer.cs">
+      <DependentUpon>Role.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RoleModule.aspx.cs">
+      <DependentUpon>RoleModule.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RoleModule.aspx.designer.cs">
+      <DependentUpon>RoleModule.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RolePage.aspx.cs">
+      <DependentUpon>RolePage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RolePage.aspx.designer.cs">
+      <DependentUpon>RolePage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RoleSet.aspx.cs">
+      <DependentUpon>RoleSet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RoleSet.aspx.designer.cs">
+      <DependentUpon>RoleSet.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RoleStation.aspx.cs">
+      <DependentUpon>RoleStation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RoleStation.aspx.designer.cs">
+      <DependentUpon>RoleStation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RoleUser.aspx.cs">
+      <DependentUpon>RoleUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RoleUser.aspx.designer.cs">
+      <DependentUpon>RoleUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServiceReference1\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Travel.aspx.cs">
+      <DependentUpon>Travel.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Travel.aspx.designer.cs">
+      <DependentUpon>Travel.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserBD.aspx.cs">
+      <DependentUpon>UserBD.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserBD.aspx.designer.cs">
+      <DependentUpon>UserBD.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebForm1.aspx.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForm1.aspx.designer.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="backup\admin\" />
+    <Folder Include="Upload\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\LocalText.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>LocalText.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\LocalText.zh-CN.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>LocalText.zh-CN.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="rdlc\ApplyTravel.rdlc" />
+    <EmbeddedResource Include="rdlc\MyClaimsReport.rdlc" />
+    <EmbeddedResource Include="rdlc\Report1.rdlc" />
+    <EmbeddedResource Include="rdlc\Report2.rdlc" />
+    <EmbeddedResource Include="rdlc\ReportG.rdlc" />
+    <EmbeddedResource Include="rdlc\ReportG1.rdlc" />
+    <EmbeddedResource Include="rdlc\ReportT.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Code\Data.xsc">
+      <DependentUpon>Data.xsd</DependentUpon>
+    </None>
+    <Content Include="App_Code\Data.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Data.Designer.cs</LastGenOutput>
+    </Content>
+    <None Include="App_Code\Data.xss">
+      <DependentUpon>Data.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ServiceReference1\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>36934</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

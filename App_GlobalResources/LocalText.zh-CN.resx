@@ -1,0 +1,477 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Amount" xml:space="preserve">
+    <value>金额</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>浏览...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>放弃</value>
+  </data>
+  <data name="COARemark" xml:space="preserve">
+    <value>费用描述</value>
+  </data>
+  <data name="COAType" xml:space="preserve">
+    <value>费用类型</value>
+  </data>
+  <data name="CollectionStation" xml:space="preserve">
+    <value>代收站</value>
+  </data>
+  <data name="Communication" xml:space="preserve">
+    <value>通讯费</value>
+  </data>
+  <data name="CompanyPay" xml:space="preserve">
+    <value>公司支付</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>币种:</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>部门:</value>
+  </data>
+  <data name="DetailTitle" xml:space="preserve">
+    <value>报销明细（双击显示详细信息）</value>
+  </data>
+  <data name="DraftExpense" xml:space="preserve">
+    <value>草稿报销单</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="Employeepay" xml:space="preserve">
+    <value>个人支付</value>
+  </data>
+  <data name="Entertainment" xml:space="preserve">
+    <value>交际费</value>
+  </data>
+  <data name="ExpenseClaim" xml:space="preserve">
+    <value>费用报销</value>
+  </data>
+  <data name="GeneralExpenseApply" xml:space="preserve">
+    <value>通用费用报销</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>出差地点</value>
+  </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>报销月度:</value>
+  </data>
+  <data name="MyExpense" xml:space="preserve">
+    <value>我的报销单</value>
+  </data>
+  <data name="OtherExpense" xml:space="preserve">
+    <value>其他费用</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>申请人</value>
+  </data>
+  <data name="Pagesize" xml:space="preserve">
+    <value>单页行数:</value>
+  </data>
+  <data name="Period" xml:space="preserve">
+    <value>出差时间</value>
+  </data>
+  <data name="Remark" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="SaveApply" xml:space="preserve">
+    <value>保存并申请</value>
+  </data>
+  <data name="SaveAsDraft" xml:space="preserve">
+    <value>保存草稿</value>
+  </data>
+  <data name="Station" xml:space="preserve">
+    <value>站点</value>
+  </data>
+  <data name="SupportDocument" xml:space="preserve">
+    <value>上传文件:</value>
+  </data>
+  <data name="TableNo" xml:space="preserve">
+    <value>表单号</value>
+  </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>合计</value>
+  </data>
+  <data name="Transportation" xml:space="preserve">
+    <value>交通费</value>
+  </data>
+  <data name="TravellingExpenseApply" xml:space="preserve">
+    <value>差旅费报销</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>报销类型</value>
+  </data>
+  <data name="CostCenter" xml:space="preserve">
+    <value>成本中心</value>
+  </data>
+  <data name="StationLabel" xml:space="preserve">
+    <value>站点:</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="EffectPeriod" xml:space="preserve">
+    <value>生效月份</value>
+  </data>
+  <data name="ExpenseType" xml:space="preserve">
+    <value>费用类型</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>附件</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>查看</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="ExpenseDetail" xml:space="preserve">
+    <value>费用明细</value>
+  </data>
+  <data name="ExpenseList" xml:space="preserve">
+    <value>费用明细列表</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>起始地</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>目的地</value>
+  </data>
+  <data name="Budget" xml:space="preserve">
+    <value>预算 (已用/全部)</value>
+  </data>
+  <data name="GeneralInfo" xml:space="preserve">
+    <value>基本信息</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>客户</value>
+  </data>
+  <data name="CustomerType" xml:space="preserve">
+    <value>洽谈对象</value>
+  </data>
+  <data name="Guest" xml:space="preserve">
+    <value>宾客</value>
+  </data>
+  <data name="Others" xml:space="preserve">
+    <value>其他信息</value>
+  </data>
+  <data name="Purpose" xml:space="preserve">
+    <value>目的</value>
+  </data>
+  <data name="AllTotal" xml:space="preserve">
+    <value>合计</value>
+  </data>
+  <data name="BudgetReview" xml:space="preserve">
+    <value>查看预算</value>
+  </data>
+  <data name="CompanyExpense" xml:space="preserve">
+    <value>公司支付</value>
+  </data>
+  <data name="CompanyExpenseTotal" xml:space="preserve">
+    <value>公司支付合计</value>
+  </data>
+  <data name="CurrencyColumn" xml:space="preserve">
+    <value>币种</value>
+  </data>
+  <data name="PersonalExpense" xml:space="preserve">
+    <value>个人支付</value>
+  </data>
+  <data name="PersonalExpenseTotal" xml:space="preserve">
+    <value>个人支付合计</value>
+  </data>
+  <data name="ScanFile" xml:space="preserve">
+    <value>扫描文件(*):</value>
+  </data>
+  <data name="TravelReport" xml:space="preserve">
+    <value>出差报告(*):</value>
+  </data>
+  <data name="ApproveStatus" xml:space="preserve">
+    <value>审批状态</value>
+  </data>
+  <data name="ClaimType" xml:space="preserve">
+    <value>单据类型</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>复制(无附件)</value>
+  </data>
+  <data name="CurrentApprover" xml:space="preserve">
+    <value>当前审批人</value>
+  </data>
+  <data name="MyClaimsTitle" xml:space="preserve">
+    <value>单击查看进度,双击查看详细信息.</value>
+  </data>
+  <data name="NO" xml:space="preserve">
+    <value>表单号</value>
+  </data>
+  <data name="Reimbursement" xml:space="preserve">
+    <value>我的报销单</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>查找</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>单据状态</value>
+  </data>
+  <data name="SubmitDate" xml:space="preserve">
+    <value>提交时间</value>
+  </data>
+  <data name="SubmitPerson" xml:space="preserve">
+    <value>提单人</value>
+  </data>
+  <data name="Additional" xml:space="preserve">
+    <value>加批</value>
+  </data>
+  <data name="ApprovalRemark" xml:space="preserve">
+    <value>审批意见</value>
+  </data>
+  <data name="ApprovalSearch" xml:space="preserve">
+    <value>审批查询</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>我已审批</value>
+  </data>
+  <data name="ApprovePageTitle" xml:space="preserve">
+    <value>点击左侧按钮直接批准或双击查看详细信息审批.</value>
+  </data>
+  <data name="CompanyExpenseTotalLabel" xml:space="preserve">
+    <value>公司支付合计:</value>
+  </data>
+  <data name="Department1" xml:space="preserve">
+    <value>部门</value>
+  </data>
+  <data name="PeriodLabel" xml:space="preserve">
+    <value>出差时间:</value>
+  </data>
+  <data name="PersonalExpenseTotalLabel" xml:space="preserve">
+    <value>个人支付合计:</value>
+  </data>
+  <data name="PersonLabel" xml:space="preserve">
+    <value>申请人:</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>拒绝</value>
+  </data>
+  <data name="Rejected" xml:space="preserve">
+    <value>我已拒绝</value>
+  </data>
+  <data name="RemarkLabel" xml:space="preserve">
+    <value>备注:</value>
+  </data>
+  <data name="Return" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="ToLabel" xml:space="preserve">
+    <value>至:</value>
+  </data>
+  <data name="TotalAmountLabel" xml:space="preserve">
+    <value>合计:</value>
+  </data>
+  <data name="WaitingApprove" xml:space="preserve">
+    <value>待我审批</value>
+  </data>
+  <data name="FileManagement" xml:space="preserve">
+    <value>影像管理</value>
+  </data>
+  <data name="ScanningGridTitle" xml:space="preserve">
+    <value>双击查看详细信息.</value>
+  </data>
+  <data name="DepartmentBudget" xml:space="preserve">
+    <value>部门预算 MTD(已用/全部)</value>
+  </data>
+  <data name="PersonBudget" xml:space="preserve">
+    <value>个人预算 MTD(已用/全部)</value>
+  </data>
+  <data name="StationBudget" xml:space="preserve">
+    <value>站点预算 MTD(已用/全部)</value>
+  </data>
+  <data name="CC" xml:space="preserve">
+    <value>抄送</value>
+  </data>
+  <data name="CCListTitle" xml:space="preserve">
+    <value>邮件抄送人</value>
+  </data>
+  <data name="PersonBudgetYTD" xml:space="preserve">
+    <value>个人预算 YTD(已用/全部)</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>复制(带附件)</value>
+  </data>
+  <data name="Copy1" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="BudgetOrNot" xml:space="preserve">
+    <value>预算情况</value>
+  </data>
+  <data name="PaymentDate" xml:space="preserve">
+    <value>支付日期</value>
+  </data>
+  <data name="PaymentType" xml:space="preserve">
+    <value>支付类型</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>供应商</value>
+  </data>
+  <data name="NewDSTN" xml:space="preserve">
+    <value>新增目的地</value>
+  </data>
+  <data name="BudgetYTD" xml:space="preserve">
+    <value>当年预算(已用/全部)</value>
+  </data>
+  <data name="DepartmentBudgetYTD" xml:space="preserve">
+    <value>部门预算 YTD(已用/全部)</value>
+  </data>
+  <data name="StationBudgetYTD" xml:space="preserve">
+    <value>站点预算 YTD(已用/全部)</value>
+  </data>
+  <data name="UnBudget" xml:space="preserve">
+    <value>强制预算外</value>
+  </data>
+  <data name="ExpenseItem" xml:space="preserve">
+    <value>费用项目</value>
+  </data>
+  <data name="MyExpenseOld" xml:space="preserve">
+    <value>旧版数据</value>
+  </data>
+  <data name="RemarkHistory" xml:space="preserve">
+    <value>历史审批备注:</value>
+  </data>
+  <data name="CostCenterNew" xml:space="preserve">
+    <value>成本中心(目前)</value>
+  </data>
+  <data name="CostCenter1" xml:space="preserve">
+    <value>成本中心:</value>
+  </data>
+  <data name="FilePostFix" xml:space="preserve">
+    <value>文件后缀</value>
+  </data>
+</root>
