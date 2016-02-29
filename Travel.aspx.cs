@@ -2977,7 +2977,7 @@ namespace eReimbursement
                 sb.Append("<br />");
                 //return true;
                 //160115 垫付
-                if (hdOnBehalf.Value == null || hdOnBehalf.Value == "")
+                if (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "")
                 {
 
                     if (dtMail.Rows[0]["Budget"].ToString() == "1")//预算内
@@ -6569,41 +6569,65 @@ namespace eReimbursement
                     {
                         if (budgetnew == 0)
                         {
-                            //////输出预算内容
-                            ////DIMERCO.SDK.MailMsg mail = new DIMERCO.SDK.MailMsg();
+                            ////输出预算内容
+                            //DIMERCO.SDK.MailMsg mail = new DIMERCO.SDK.MailMsg();
 
-                            ////mail.FromDispName = "eReimbursement";
-                            ////mail.From = "DIC2@dimerco.com";
-                            ////mail.To = "Andy_Kang@dimerco.com";
-                            ////mail.Title = "eReimbursement Bug" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:dd");
-                            ////string body = "<div>" + Request.Cookies.Get("eReimUserID").Value + "<br/>Travel<br/><table>";
-                            ////body += "<tr>";
-                            ////for (int j = 0; j < dtbudget.Columns.Count; j++)
-                            ////{
-                            ////    body += "<th>" + dtbudget.Columns[j].ColumnName + "</th>";
-                            ////}
-                            ////body += "</tr>";
-                            ////for (int i = 0; i < dtbudget.Rows.Count; i++)
-                            ////{
-                            ////    body += "<tr>";
-                            ////    for (int j = 0; j < dtbudget.Columns.Count; j++)
-                            ////    {
-                            ////        body += "<td>" + dtbudget.Rows[i][j].ToString() + "</td>";
-                            ////    }
-                            ////    body += "</tr>";
-                            ////}
-                            ////body += "</table></div>";
-                            ////mail.Body = body;
-                            ////mail.Send();
-                            X.AddScript("Ext.Msg.show({ title: 'Message', msg: '未设置预算,仅可按<a style=\"color:Red\">UnBudgeted</a>流程申请,是否接受?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            //mail.FromDispName = "eReimbursement";
+                            //mail.From = "DIC2@dimerco.com";
+                            //mail.To = "Andy_Kang@dimerco.com";
+                            //mail.Title = "eReimbursement Bug" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:dd");
+                            //string body = "<div>" + Request.Cookies.Get("eReimUserID").Value + "<br/>Travel<br/><table>";
+                            //body += "<tr>";
+                            //for (int j = 0; j < dtbudget.Columns.Count; j++)
+                            //{
+                            //    body += "<th>" + dtbudget.Columns[j].ColumnName + "</th>";
+                            //}
+                            //body += "</tr>";
+                            //for (int i = 0; i < dtbudget.Rows.Count; i++)
+                            //{
+                            //    body += "<tr>";
+                            //    for (int j = 0; j < dtbudget.Columns.Count; j++)
+                            //    {
+                            //        body += "<td>" + dtbudget.Rows[i][j].ToString() + "</td>";
+                            //    }
+                            //    body += "</tr>";
+                            //}
+                            //body += "</table></div>";
+                            //mail.Body = body;
+                            //mail.Send();
+                            //160224 如果为垫付,则直接保存不提示预算情况
+                            if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
+                            {
+                                X.AddScript("SaveAllNew('" + budgetnew.ToString() + "');");
+                            }
+                            else
+                            {
+                                X.AddScript("Ext.Msg.show({ title: 'Message', msg: '未设置预算,仅可按<a style=\"color:Red\">UnBudgeted</a>流程申请,是否接受?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            }
+                            
                         }
                         else if (budgetnew == -1)
-                        {
-                            X.AddScript("Ext.Msg.show({ title: 'Message', msg: '超出预算,仅可按<a style=\"color:Red\">Over-Budgeted</a>流程申请,是否接受?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                        {//160224 如果为垫付,则直接保存不提示预算情况
+                            if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
+                            {
+                                X.AddScript("SaveAllNew('" + budgetnew.ToString() + "');");
+                            }
+                            else
+                            {
+                                X.AddScript("Ext.Msg.show({ title: 'Message', msg: '超出预算,仅可按<a style=\"color:Red\">Over-Budgeted</a>流程申请,是否接受?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            }
                         }
                         else if (budgetnew == -2)
                         {
-                            X.AddScript("Ext.Msg.show({ title: 'Message', msg: '未设置预算或超出预算,仅可按<a style=\"color:Red\">UnBudgeted</a>流程申请,是否接受?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            //160224 如果为垫付,则直接保存不提示预算情况
+                            if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
+                            {
+                                X.AddScript("SaveAllNew('" + budgetnew.ToString() + "');");
+                            }
+                            else
+                            {
+                                X.AddScript("Ext.Msg.show({ title: 'Message', msg: '未设置预算或超出预算,仅可按<a style=\"color:Red\">UnBudgeted</a>流程申请,是否接受?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            }
                         }
                     }
                     else
@@ -6636,16 +6660,39 @@ namespace eReimbursement
                             //body += "</table></div>";
                             //mail.Body = body;
                             //mail.Send();
-
-                            X.AddScript("Ext.Msg.show({ title: 'Message', msg: '<a style=\"color:Red\">UnBudgeted</a>,do you accept?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            //160224 如果为垫付,则直接保存不提示预算情况
+                            if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
+                            {
+                                X.AddScript("SaveAllNew('" + budgetnew.ToString() + "');");
+                            }
+                            else
+                            {
+                                X.AddScript("Ext.Msg.show({ title: 'Message', msg: '<a style=\"color:Red\">UnBudgeted</a>,do you accept?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            }
                         }
                         else if (budgetnew == -1)
                         {
-                            X.AddScript("Ext.Msg.show({ title: 'Message', msg: '<a style=\"color:Red\">Over-Budgeted</a>,do you accept?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            //160224 如果为垫付,则直接保存不提示预算情况
+                            if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
+                            {
+                                X.AddScript("SaveAllNew('" + budgetnew.ToString() + "');");
+                            }
+                            else
+                            {
+                                X.AddScript("Ext.Msg.show({ title: 'Message', msg: '<a style=\"color:Red\">Over-Budgeted</a>,do you accept?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            }
                         }
                         else if (budgetnew == -2)
                         {
-                            X.AddScript("Ext.Msg.show({ title: 'Message', msg: '<a style=\"color:Red\">UnBudgeted</a>,do you accept?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            //160224 如果为垫付,则直接保存不提示预算情况
+                            if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
+                            {
+                                X.AddScript("SaveAllNew('" + budgetnew.ToString() + "');");
+                            }
+                            else
+                            {
+                                X.AddScript("Ext.Msg.show({ title: 'Message', msg: '<a style=\"color:Red\">UnBudgeted</a>,do you accept?', buttons: { ok: 'Ok',cancel:'No' }, fn: function (btn) { if(btn=='ok'){SaveAllNew('" + budgetnew.ToString() + "');}else{return false;} } });");
+                            }
                         }
                     }
                 }
