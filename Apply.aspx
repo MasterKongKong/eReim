@@ -172,36 +172,38 @@
     //新增费用明细
     //160113,垫付人识别
     var AddDetail = function (type) {
+        var apply_userid = cbxPerson.getValue();
         var userid = cbxOnBehalfName.getValue() == "" ? cbxPerson.getValue() : cbxOnBehalfName.getValue();
         if (type == 'T') {
-            Window1.loadContent({ url: 'ApplyT.aspx?UserID=' + userid, mode: 'iframe' });
+            Window1.loadContent({ url: 'ApplyT.aspx?UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
             Window1.show();
         }
         else if (type == 'C') {
-            Window1.loadContent({ url: 'ApplyC.aspx?UserID=' + userid, mode: 'iframe' });
+            Window1.loadContent({ url: 'ApplyC.aspx?UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
             Window1.show();
         }
         else if (type == 'O') {
-            Window1.loadContent({ url: 'ApplyO.aspx?UserID=' + userid, mode: 'iframe' });
+            Window1.loadContent({ url: 'ApplyO.aspx?UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
             Window1.show();
         }
         else if (type == 'E') {
-            Window1.loadContent({ url: 'ApplyE.aspx?UserID=' + userid, mode: 'iframe' });
+            Window1.loadContent({ url: 'ApplyE.aspx?UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
             Window1.show();
         }
     };
     //160113,垫付人识别
     var rowdbclick = function (control, rowindex, button) {
         if (Store1) {
+            var apply_userid = cbxPerson.getValue();
             var userid = cbxOnBehalfName.getValue() == "" ? cbxPerson.getValue() : cbxOnBehalfName.getValue();
             if (Store1.data.items[rowindex].data.Type == 'T') {
 
                 //Draft=2,则表示非复制而来,已经完成的申请,传递RequestID到子窗体以便读取Budget_Complete数据
                 if (Store1.data.items[rowindex].data.Draft.toString() == '2') {
-                    Window1.loadContent({ url: 'ApplyT.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&RequestID=' + hdTravelRequestID.getValue().toString(), mode: 'iframe' });
+                    Window1.loadContent({ url: 'ApplyT.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&RequestID=' + hdTravelRequestID.getValue().toString() + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 }
                 else {
-                    Window1.loadContent({ url: 'ApplyT.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid, mode: 'iframe' });
+                    Window1.loadContent({ url: 'ApplyT.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 }
                 Window1.show();
             }
@@ -210,10 +212,10 @@
                 //                    Window1.show();
                 //Draft=2,则表示非复制而来,已经完成的申请,传递RequestID到子窗体以便读取Budget_Complete数据
                 if (Store1.data.items[rowindex].data.Draft.toString() == '2') {
-                    Window1.loadContent({ url: 'ApplyC.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&RequestID=' + hdTravelRequestID.getValue().toString(), mode: 'iframe' });
+                    Window1.loadContent({ url: 'ApplyC.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&RequestID=' + hdTravelRequestID.getValue().toString() + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 }
                 else {
-                    Window1.loadContent({ url: 'ApplyC.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid, mode: 'iframe' });
+                    Window1.loadContent({ url: 'ApplyC.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 }
                 Window1.show();
             }
@@ -222,10 +224,10 @@
                 //                    Window1.show();
                 //Draft=2,则表示非复制而来,已经完成的申请,传递RequestID到子窗体以便读取Budget_Complete数据
                 if (Store1.data.items[rowindex].data.Draft.toString() == '2') {
-                    Window1.loadContent({ url: 'ApplyO.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&RequestID=' + hdTravelRequestID.getValue().toString(), mode: 'iframe' });
+                    Window1.loadContent({ url: 'ApplyO.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&RequestID=' + hdTravelRequestID.getValue().toString() + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 }
                 else {
-                    Window1.loadContent({ url: 'ApplyO.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid, mode: 'iframe' });
+                    Window1.loadContent({ url: 'ApplyO.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 }
                 Window1.show();
             }
@@ -234,10 +236,10 @@
                 //                    Window1.show();
                 //Draft=2,则表示非复制而来,已经完成的申请,传递RequestID到子窗体以便读取Budget_Complete数据
                 if (Store1.data.items[rowindex].data.Draft.toString() == '2') {
-                    Window1.loadContent({ url: 'ApplyE.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&RequestID=' + hdTravelRequestID.getValue().toString(), mode: 'iframe' });
+                    Window1.loadContent({ url: 'ApplyE.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&RequestID=' + hdTravelRequestID.getValue().toString() + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 }
                 else {
-                    Window1.loadContent({ url: 'ApplyE.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid, mode: 'iframe' });
+                    Window1.loadContent({ url: 'ApplyE.aspx?Draft=' + Store1.data.items[rowindex].data.Draft + '&UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 }
                 Window1.show();
             }
@@ -245,22 +247,23 @@
         SetWindowTitle(null, null, null);
     };
     var RowCommand = function (command, record, rowIndex) {
+        var apply_userid = cbxPerson.getValue();
         var userid = cbxOnBehalfName.getValue() == "" ? cbxPerson.getValue() : cbxOnBehalfName.getValue();
         if (command == 'Edit') {
             if (record.data.Type == 'T') {
-                Window1.loadContent({ url: 'ApplyT.aspx?Draft=' + record.data.Draft + '&UserID=' + userid, mode: 'iframe' });
+                Window1.loadContent({ url: 'ApplyT.aspx?Draft=' + record.data.Draft + '&UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 Window1.show();
             }
             else if (record.data.Type == 'C') {
-                Window1.loadContent({ url: 'ApplyC.aspx?Draft=' + record.data.Draft + '&UserID=' + userid, mode: 'iframe' });
+                Window1.loadContent({ url: 'ApplyC.aspx?Draft=' + record.data.Draft + '&UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 Window1.show();
             }
             else if (record.data.Type == 'O') {
-                Window1.loadContent({ url: 'ApplyO.aspx?Draft=' + record.data.Draft + '&UserID=' + userid, mode: 'iframe' });
+                Window1.loadContent({ url: 'ApplyO.aspx?Draft=' + record.data.Draft + '&UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 Window1.show();
             }
             else {
-                Window1.loadContent({ url: 'ApplyE.aspx?Draft=' + record.data.Draft + '&UserID=' + userid, mode: 'iframe' });
+                Window1.loadContent({ url: 'ApplyE.aspx?Draft=' + record.data.Draft + '&UserID=' + userid + '&apply_userid=' + apply_userid, mode: 'iframe' });
                 Window1.show();
             }
             SetWindowTitle(null, null, null);

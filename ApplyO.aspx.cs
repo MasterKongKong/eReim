@@ -29,7 +29,7 @@ namespace eReimbursement
             {
                 cs.DBCommand dbc = new cs.DBCommand();
                 //hdCurrency.Value = 6.1M;
-                DataSet ds2 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(Request.QueryString["UserID"].ToString());
+                DataSet ds2 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(Request.QueryString["apply_userid"].ToString());
                 string station = "";
                 if (ds2.Tables[0].Rows.Count == 1)
                 {
@@ -39,11 +39,11 @@ namespace eReimbursement
                     cbxTStation.Text = dt1.Rows[0]["CostCenter"].ToString();
                     LabelCurrency.Text = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(station);
                     DataTable dttemp = new DataTable();
-                    string sqltemp = "select * from ESUSER where Userid='" + Request.QueryString["UserID"].ToString() + "'";
+                    string sqltemp = "select * from ESUSER where Userid='" + Request.QueryString["apply_userid"].ToString() + "'";
                     dttemp = dbc.GetData("eReimbursement", sqltemp);
                     if (dttemp.Rows.Count > 0)
                     {
-                        LabelCurrency.Text = dttemp.Rows[0]["Currency"].ToString();
+                        LabelCurrency.Text = dttemp.Rows[0]["Currency"].ToString();//页面只显示登陆人币种
                     }
                 }
                 //hdCurrency.Value = System.Math.Round(1 / DIMERCO.SDK.Utilities.LSDK.GetLatestStationUSDConvertRate(station),3);
@@ -427,10 +427,10 @@ namespace eReimbursement
             //160115
             string useridonbehalf = Request.QueryString["UserID"].ToString();
             string loginuserid = Request.Cookies.Get("eReimUserID").Value.ToString();
-            if (useridonbehalf != loginuserid)
-            {
-                return;
-            }
+            //if (useridonbehalf != loginuserid)
+            //{
+            //    return;
+            //}
 
             cs.DBCommand dbc = new cs.DBCommand();
             DataTable dtbudget = new DataTable();
@@ -621,6 +621,17 @@ namespace eReimbursement
             }
             else
             {
+                string station_applyperson = ""; string costcenter_applyperson = ""; string dept_applyperson = "";
+                DataSet ds_apply = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(Request.QueryString["apply_userid"].ToString());
+                if (ds_apply.Tables[0].Rows.Count == 1)
+                {
+                    DataTable dt_apply = ds_apply.Tables[0];
+                    dept_applyperson = dt_apply.Rows[0]["DepartmentName"].ToString();
+                    station_applyperson = dt_apply.Rows[0]["stationCode"].ToString();
+                    costcenter_applyperson = dt_apply.Rows[0]["CostCenter"].ToString();
+                }
+
+
                 string userid = Request.QueryString["UserID"].ToString();
                 string ostation = ""; string station = ""; string department = "";
                 DataSet ds2 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(userid);
@@ -633,16 +644,16 @@ namespace eReimbursement
                 }
 
                 decimal rate = 1;//记录用户币种与预算站点币种汇率
-                string CurLocal = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(station);
+                string CurLocal = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(costcenter_applyperson);//申请人币种
                 //检查是否本地维护过特殊币种
                 DataTable dttemp = new DataTable();
-                string sqltemp = "select * from ESUSER where Userid='" + userid + "'";
+                string sqltemp = "select * from ESUSER where Userid='" + Request.QueryString["apply_userid"].ToString() + "'";
                 dttemp = dbc.GetData("eReimbursement", sqltemp);
                 if (dttemp.Rows.Count > 0)
                 {
                     CurLocal = dttemp.Rows[0]["Currency"].ToString();//如果单独设置了币种
                 }
-                string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(ostation);
+                string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(ostation);//预算站点币种
 
 
                 dtbudget.Columns.Add("Year", typeof(System.String));//区分跨年情况
