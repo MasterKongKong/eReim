@@ -1840,7 +1840,7 @@ namespace eReimbursement
         /// </summary>
         /// <param name="detailjson">json数据</param>
         /// <returns>保存是否成功</returns>
-        protected bool SaveDetail(string detailjson)
+        protected bool SaveDetail(string detailjson,string localcur,string costcenter,string costcentercur)
         {
             JavaScriptSerializer ser = new JavaScriptSerializer();
             List<DetailExpense> Details = ser.Deserialize<List<DetailExpense>>(detailjson);
@@ -1868,9 +1868,9 @@ namespace eReimbursement
                 value += "'" + detail.AccountName + "',";
                 value += "'" + detail.AccountCode + "',";
                 value += detail.AccountDes == null ? "null," : ("'" + detail.AccountDes.Replace("'", "''") + "',");
-                value += "'" + detail.Cur + "',";
+                value += "'" + localcur + "',";
                 value += detail.Amount == "" ? "null," : (detail.Amount + ",");
-                value += "'" + detail.TSation + "',";
+                value += "'" + costcenter + "',";
 
                 if (detail.Type == "C")
                 {
@@ -1905,22 +1905,22 @@ namespace eReimbursement
                     value += ",1,";
                 }
                 //处理成本中心币种金额
-                DataSet ds2 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(cbxPerson.Text);
-                string station = "";
-                if (ds2.Tables[0].Rows.Count == 1)
-                {
-                    DataTable dt1 = ds2.Tables[0];
-                    station = dt1.Rows[0]["stationCode"].ToString();
-                    DataTable dttemp = new DataTable();
-                    string sqltemp = "select * from ESUSER where Userid='" + cbxPerson.Text + "'";
-                    dttemp = dbc.GetData("eReimbursement", sqltemp);
-                    if (dttemp.Rows.Count > 0)
-                    {
-                        station = dttemp.Rows[0]["Station"].ToString();
-                    }
-                }
-                string Tstation = detail.TSation == "" ? station : detail.TSation;
-                decimal re = GetRateByUserID(cbxPerson.Text, DateTime.Now.Year, true);
+                //DataSet ds2 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(cbxPerson.Text);
+                //string station = "";
+                //if (ds2.Tables[0].Rows.Count == 1)
+                //{
+                //    DataTable dt1 = ds2.Tables[0];
+                //    station = dt1.Rows[0]["stationCode"].ToString();
+                //    DataTable dttemp = new DataTable();
+                //    string sqltemp = "select * from ESUSER where Userid='" + cbxPerson.Text + "'";
+                //    dttemp = dbc.GetData("eReimbursement", sqltemp);
+                //    if (dttemp.Rows.Count > 0)
+                //    {
+                //        station = dttemp.Rows[0]["Station"].ToString();
+                //    }
+                //}
+                //string Tstation = detail.TSation == "" ? station : detail.TSation;
+                decimal re = GetRateByUserID(DateTime.Now.Year, true, localcur,costcentercur);
                 string ccamount = String.IsNullOrEmpty(detail.Amount) ? "0" : (System.Math.Round(Convert.ToDecimal(detail.Amount) * re, 2)).ToString();
                 value += ccamount;
 
@@ -1934,26 +1934,26 @@ namespace eReimbursement
             }
             return true;
         }
-        protected decimal GetRateByUserID(string UserID, int year, bool con)
+        protected decimal GetRateByUserID(int year, bool con, string LocalCurrency, string BudgetCurrency)
         {
-            cs.DBCommand dbc = new cs.DBCommand();
-            //取得币种转换值
-            DataSet dsuserinfo = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(UserID);
-            DataTable dtuserinfo = dsuserinfo.Tables[0];
-            string station = dtuserinfo.Rows[0]["stationCode"].ToString();
-            string costcenter = dtuserinfo.Rows[0]["CostCenter"].ToString();
-            //获取该人币种
-            string LocalCurrency = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(station);
-            //检查是否本地维护过特殊币种
-            DataTable dttemp = new DataTable();
-            string sqltemp = "select * from ESUSER where Userid='" + UserID + "'";
-            dttemp = dbc.GetData("eReimbursement", sqltemp);
-            if (dttemp.Rows.Count > 0)
-            {
-                LocalCurrency = dttemp.Rows[0]["Currency"].ToString();//如果单独设置了币种
-            }
-            //获取预算站点币种
-            string BudgetCurrency = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(costcenter);
+            //cs.DBCommand dbc = new cs.DBCommand();
+            ////取得币种转换值
+            //DataSet dsuserinfo = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(UserID);
+            //DataTable dtuserinfo = dsuserinfo.Tables[0];
+            //string station = dtuserinfo.Rows[0]["stationCode"].ToString();
+            ////string costcenter = dtuserinfo.Rows[0]["CostCenter"].ToString();
+            ////获取该人币种
+            //string LocalCurrency = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(station);
+            ////检查是否本地维护过特殊币种
+            //DataTable dttemp = new DataTable();
+            //string sqltemp = "select * from ESUSER where Userid='" + UserID + "'";
+            //dttemp = dbc.GetData("eReimbursement", sqltemp);
+            //if (dttemp.Rows.Count > 0)
+            //{
+            //    LocalCurrency = dttemp.Rows[0]["Currency"].ToString();//如果单独设置了币种
+            //}
+            ////获取预算站点币种
+            //string BudgetCurrency = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(costcenter);
             decimal rate = 1;
             if (con)
             {
@@ -2304,7 +2304,7 @@ namespace eReimbursement
                     updatesql += ",[Budget]=" + budget;
                     updatesql += ",Station2='" + ostation + "'";
                     //160123 垫付
-                    if (hdOnBehalf.Value != null && hdOnBehalf.Value != "")
+                    if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
                     {
                         updatesql += ",OnBehalfPersonID='" + hdOnBehalf.Value.ToString() + "'";
                         DataSet dsE = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(hdOnBehalf.Value.ToString());
@@ -2519,7 +2519,7 @@ namespace eReimbursement
                     {
                         hdTravelRequestNo.Value = newno;
                         // || !SendMail(hdTravelRequestID.Value.ToString())
-                        if (!SaveDetail(detail)||!SendMailNew(dtbudget))
+                        if (!SaveDetail(detail, CurLocal, ostation, CurBudget) || !SendMailNew(dtbudget))
                         {
                             ErrorHandle("Data Error.");
                             return;
@@ -2750,7 +2750,7 @@ namespace eReimbursement
                     {
                         hdTravelRequestID.Value = newid.Split(',')[0];//新增后记录ID
                         hdTravelRequestNo.Value = newid.Split(',')[1];//新增后记录No
-                        if (!SaveDetail(detail) || !SendMailNew(dtbudget))
+                        if (!SaveDetail(detail, CurLocal, ostation, CurBudget) || !SendMailNew(dtbudget))
                         {
                             ErrorHandle("Data Error.");
                             return;
@@ -2818,7 +2818,7 @@ namespace eReimbursement
                     }
                     else
                     {
-                        if (!SaveDetail(detail))
+                        if (!SaveDetail(detail, CurLocal, ostation, CurBudget))
                         {
                             ErrorHandle("Data Error.");
                             return;
@@ -2890,7 +2890,7 @@ namespace eReimbursement
                         hdTravelRequestID.Value = newid.Split(',')[0];//新增后记录ID
                         hdTravelRequestNo.Value = newid.Split(',')[1];//新增后记录No
 
-                        if (!SaveDetail(detail))
+                        if (!SaveDetail(detail, CurLocal, ostation, CurBudget))
                         {
                             ErrorHandle("Data Error.");
                             return;
@@ -3820,7 +3820,7 @@ namespace eReimbursement
                         {
                             hdTravelRequestNo.Value = newno;
                             // || !SendMail(hdTravelRequestID.Value.ToString())
-                            if (!SaveDetail(detail) || !SendMailNew(dtbudget))//Budget未计入Current,%需重新计算
+                            if (!SaveDetail(detail, CurLocal, ostation, CurBudget) || !SendMailNew(dtbudget))//Budget未计入Current,%需重新计算
                             {
                                 ErrorHandle("Data Error.");
                                 return;
@@ -4029,7 +4029,7 @@ namespace eReimbursement
                         {
                             hdTravelRequestID.Value = newid.Split(',')[0];//新增后记录ID
                             hdTravelRequestNo.Value = newid.Split(',')[1];//新增后记录No
-                            if (!SaveDetail(detail) || !SendMailNew(dtbudget))
+                            if (!SaveDetail(detail, CurLocal, ostation, CurBudget) || !SendMailNew(dtbudget))
                             {
                                 ErrorHandle("Data Error.");
                                 return;
@@ -4097,7 +4097,7 @@ namespace eReimbursement
                         }
                         else
                         {
-                            if (!SaveDetail(detail))
+                            if (!SaveDetail(detail, CurLocal, ostation, CurBudget))
                             {
                                 ErrorHandle("Data Error.");
                                 return;
@@ -4171,7 +4171,7 @@ namespace eReimbursement
                             hdTravelRequestID.Value = newid.Split(',')[0];//新增后记录ID
                             hdTravelRequestNo.Value = newid.Split(',')[1];//新增后记录No
 
-                            if (!SaveDetail(detail))
+                            if (!SaveDetail(detail, CurLocal, ostation, CurBudget))
                             {
                                 ErrorHandle("Data Error.");
                                 return;
