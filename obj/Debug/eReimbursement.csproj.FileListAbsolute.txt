@@ -168,8 +168,8 @@ D:\eReim150311\150311 2\150311\bin\Ext.Net.xml
 D:\eReim150311\150311 2\150311\bin\Ext.Net.Utilities.xml
 D:\eReim150311\150311 2\150311\bin\Newtonsoft.Json.pdb
 D:\eReim150311\150311 2\150311\bin\Newtonsoft.Json.xml
-D:\eReim150311\150311 2\150311\obj\Debug\ResolveAssemblyReference.cache
 D:\eReim150311\150311 2\150311\obj\Debug\RdlCompile.cache
 D:\eReim150311\150311 2\150311\obj\Debug\RdlCompile.compiled
 D:\eReim150311\150311 2\150311\obj\Debug\eReimbursement.dll
 D:\eReim150311\150311 2\150311\obj\Debug\eReimbursement.pdb
+D:\eReim150311\150311 2\150311\obj\Debug\eReimbursement.csprojResolveAssemblyReference.cache
