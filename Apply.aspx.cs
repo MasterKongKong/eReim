@@ -4311,8 +4311,8 @@ namespace eReimbursement
                 {
                     mail.To = dsowner.Tables[0].Rows[0]["eMail"].ToString();
                 }
-                //mail.To = mailto;
-                //mail.Cc = mailcc;
+                mail.To = mailto;
+                mail.Cc = mailcc;
 
 
 
@@ -4326,8 +4326,8 @@ namespace eReimbursement
 
 
                 //160127 Shanshan提出邮件测试
-                sb.Append("<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />");
-                sb.Append("<div>");
+                //sb.Append("<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />");
+                //sb.Append("<div>");
 
 
 

@@ -202,7 +202,7 @@
                 $('div#TreePanel1 div.x-tree-node-el a span').css('font-size', '12px');
             }
             TreePanel1.getNodeById('c1').select(true);
-            var ipa = "http://" + window.location.host + "/eReimbursement_Old/MyClaims.aspx";
+            var ipa = "http://219.150.98.243:88/eReimbursement_Old/MyClaims.aspx";
             TreePanel1.getNodeById('d1').setHref(ipa);
         };
     </script>
@@ -520,13 +520,13 @@
                 <Items>
                     <ext:TextField ID="tfUserID" runat="server" FieldLabel="UserID" AutoFocus="True"
                         AllowBlank="false" MsgTarget="Side" BlankText="Your UserID is required." Text="" />
-                    <ext:TextField ID="tfPW" runat="server" FieldLabel="Password" InputType="Password"
+                    <ext:TextField ID="tfPW" runat="server" FieldLabel="Password" InputType="Password" AllowBlank="false"
                         MsgTarget="Side" BlankText="Your Password is required." Text="" />
                 </Items>
                 <Buttons>
                     <ext:Button ID="btnOK" runat="server" Text="OK">
                         <Listeners>
-                            <Click Handler="if (!#{tfUserID}.validate()) {
+                            <Click Handler="if (!#{tfUserID}.validate() || !#{tfPW}.validate()) {
                                 Ext.Msg.alert('Error','The UserID and Password fields are both required');
                                 return false; 
                             }" />

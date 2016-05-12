@@ -168,8 +168,22 @@ D:\eReim150311\150311 2\150311\bin\Ext.Net.xml
 D:\eReim150311\150311 2\150311\bin\Ext.Net.Utilities.xml
 D:\eReim150311\150311 2\150311\bin\Newtonsoft.Json.pdb
 D:\eReim150311\150311 2\150311\bin\Newtonsoft.Json.xml
+D:\eReim150311\150311 2\150311\obj\Debug\ResolveAssemblyReference.cache
 D:\eReim150311\150311 2\150311\obj\Debug\RdlCompile.cache
 D:\eReim150311\150311 2\150311\obj\Debug\RdlCompile.compiled
 D:\eReim150311\150311 2\150311\obj\Debug\eReimbursement.dll
 D:\eReim150311\150311 2\150311\obj\Debug\eReimbursement.pdb
-D:\eReim150311\150311 2\150311\obj\Debug\eReimbursement.csprojResolveAssemblyReference.cache
+E:\Documents\GitHub\eReim\bin\eReimbursement.dll
+E:\Documents\GitHub\eReim\bin\eReimbursement.pdb
+E:\Documents\GitHub\eReim\obj\Debug\RdlCompile.cache
+E:\Documents\GitHub\eReim\obj\Debug\RdlCompile.compiled
+E:\Documents\GitHub\eReim\obj\Debug\eReimbursement.dll
+E:\Documents\GitHub\eReim\obj\Debug\eReimbursement.pdb
+E:\Documents\GitHub\eReim\obj\Debug\eReimbursement.csprojResolveAssemblyReference.cache
+D:\Downloads\eReim\bin\eReimbursement.dll
+D:\Downloads\eReim\bin\eReimbursement.pdb
+D:\Downloads\eReim\obj\Debug\eReimbursement.csprojResolveAssemblyReference.cache
+D:\Downloads\eReim\obj\Debug\RdlCompile.cache
+D:\Downloads\eReim\obj\Debug\RdlCompile.compiled
+D:\Downloads\eReim\obj\Debug\eReimbursement.dll
+D:\Downloads\eReim\obj\Debug\eReimbursement.pdb

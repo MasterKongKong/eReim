@@ -238,6 +238,24 @@ namespace eReimbursement {
         protected global::Ext.Net.Panel Panel3;
         
         /// <summary>
+        /// LabelOnBehalfOf 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::Ext.Net.Label LabelOnBehalfOf;
+        
+        /// <summary>
+        /// CheckBoxOnBehalfItem 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::Ext.Net.Checkbox CheckBoxOnBehalfItem;
+        
+        /// <summary>
         /// Label1 控件。
         /// </summary>
         /// <remarks>
@@ -256,22 +274,13 @@ namespace eReimbursement {
         protected global::Ext.Net.Button btnGeteLeave;
         
         /// <summary>
-        /// LabelText 控件。
+        /// cbxPerson 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::Ext.Net.Label LabelText;
-        
-        /// <summary>
-        /// labelOwner 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::Ext.Net.Label labelOwner;
+        protected global::Ext.Net.ComboBox cbxPerson;
         
         /// <summary>
         /// Label16 控件。

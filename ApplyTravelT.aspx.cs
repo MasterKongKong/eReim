@@ -2252,11 +2252,11 @@ namespace eReimbursement
                     mail.To = dsowner.Tables[0].Rows[0]["eMail"].ToString();
                 }
                 string testmailstr = "";
-                testmailstr += "<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />";
-                testmailstr += "<div>";
+                //testmailstr += "<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />";
+                //testmailstr += "<div>";
 
-                //mail.To = mailto;
-                //mail.Cc = mailcc;
+                mail.To = mailto;
+                mail.Cc = mailcc;
 
 
                 if (type == "G")//通用费用

@@ -34,7 +34,7 @@
             });
         };
         var LoadBudget = function () {
-            if (hdOwner.getValue().toString() == '') {
+            if ($("#CheckBoxOnBehalfItem").attr("checked")!= "checked"&&hdOwner.getValue().toString() == '') {
                 if (getCookie('lang') != undefined && getCookie('lang').toLowerCase() == 'zh-cn') {
                     Ext.Msg.show({ title: 'Message', msg: '请从eLeave选择出差记录.', buttons: { ok: 'Ok'} });
                 }
@@ -119,7 +119,7 @@
             //                }
             //                return false;
             //            }
-            if (hdOwner.getValue().toString() == '') {
+            if ($("#CheckBoxOnBehalfItem").attr("checked") != "checked" && hdOwner.getValue().toString() == '') {
                 if (getCookie('lang') != undefined && getCookie('lang').toLowerCase() == 'zh-cn') {
                     Ext.Msg.show({ title: 'Message', msg: '请从eLeave选择出差记录.', buttons: { ok: 'Ok'} });
                 }
@@ -128,13 +128,23 @@
                 }
                 return false;
             }
+            if ($("#CheckBoxOnBehalfItem").attr("checked") == "checked" && cbxOnBehalfName.getValue().toString() == '') {
+                if (getCookie('lang') != undefined && getCookie('lang').toLowerCase() == 'zh-cn') {
+                    Ext.Msg.show({ title: 'Message', msg: '请选择被垫付人.', buttons: { ok: 'Ok'} });
+                }
+                else {
+                    Ext.Msg.show({ title: 'Message', msg: 'Please select On behalf of Person.', buttons: { ok: 'Ok'} });
+                }
+                return false;
+            }
+
             GetSum();
             //为全局变量复制
             a1 = a;
             //
             if (a == 'ND') {
                 //正式申请
-                if (hdReport.getValue().toString() == '') {
+                if ($("#CheckBoxOnBehalfItem").attr("checked") != "checked"&&hdReport.getValue().toString() == '') {
                     if (getCookie('lang') != undefined && getCookie('lang').toLowerCase() == 'zh-cn') {
                         Ext.Msg.show({ title: 'Message', msg: '请上传出差报告.', buttons: { ok: 'Ok'} });
                     }
@@ -425,7 +435,7 @@
             GetSum();
         };
         var ClearCol = function (a, b, c) {
-            if (hdOwner.getValue().toString() == '') {
+            if ($("#CheckBoxOnBehalfItem").attr("checked")!= "checked"&&hdOwner.getValue().toString() == '') {
                 if (getCookie('lang') != undefined && getCookie('lang').toLowerCase() == 'zh-cn') {
                     Ext.Msg.show({ title: 'Message', msg: '请从eLeave选择出差记录.', buttons: { ok: 'Ok'} });
                 }
@@ -545,20 +555,25 @@
     var PasseLeaveData = function (command, record, rowIndex) {
         //            dfBdate.setValue(record.data.leaveStart1);
         //            dfEdate.setValue(record.data.leaveEnd1);
-        labelOwner.setText(record.data.Owner);
+       
+        //        labelOwner.setText(record.data.Owner);
         hdOwner.setValue(record.data.Owner);
         hdOwnerID.setValue(record.data.OwnerID);
+
         hdLeaveDate1.setValue(record.data.leaveStart1);
         hdLeaveDate2.setValue(record.data.leaveEnd1);
         hdDSTN.setValue(record.data.Destination);
 
-
+        
         labelStation.setText(record.data.Station);
         hdStation.setValue(record.data.Station)
         labelDepartment.setText(record.data.Department);
         LabelCurrency.setText(record.data.Currency);
+
         hdCurrency.setValue(record.data.Currency); //记录币种
         hdCostCenter.setValue(record.data.CostCenter); //记录成本中心
+
+
         var headercol = GridPanel2.view.headerRows[0].columns.length;
         //出差站点不能为空
         for (var i = 0; i < (headercol - 3) / 2; i++) {
@@ -716,6 +731,31 @@
         //                //                }
         //            });
     };
+
+    var CheckOnBehalfItemClick = function () {
+        if ($("#CheckBoxOnBehalfItem").attr("checked") == "checked") {//選中
+            btnGeteLeave.disable(); cbxOnBehalfName.enable(); btnBudgetView.disable();
+        } else {//取消選中
+            btnGeteLeave.enable(); cbxOnBehalfName.disable(); btnBudgetView.enable();
+
+            //清除 已經上傳的附件以及錄入的被墊付人信息
+            $("#linkTravelReport").text("");
+            $("#hdReport").text("");
+
+            $("#hdLeaveDate1").text("");
+            $("#hdLeaveDate2").text("");
+
+            cbxOnBehalfName.setValue("");
+            $("#hdOnBehalf").text("");
+            $("#LabelDept").text("");
+            $("#LabelUnit").text("");
+            $("#LabelCost").text("");
+
+        }
+        //alert($("#CheckBoxOnBehalfItem").attr("checked"));
+        //Ext.Msg.alert("Error","sdsd");
+
+    };
     </script>
     <style type="text/css">
         .custom-row
@@ -820,6 +860,7 @@
             <ext:Hidden ID="hdLeaveDate2" runat="server" />
             <ext:Hidden ID="hdDSTN" runat="server" />
             <ext:Hidden ID="hdOnBehalf" runat="server" />
+
             <ext:Panel ID="Panel1" runat="server" Height="750" Border="false">
                 <Items>
                     <ext:BorderLayout ID="BorderLayout1" runat="server">
@@ -865,28 +906,44 @@
                                             </Select>
                                         </DirectEvents>
                                     </ext:ComboBox>--%>
-                                    <ext:Label ID="Label1" runat="server" Width="160" X="10" Y="13" Text="My Business Trip @ eLeave:" />
-                                    <ext:Button ID="btnGeteLeave" runat="server" Text="Load" Width="60" X="175" Y="10"
+                                    <ext:Label ID="LabelOnBehalfOf" runat="server" Width="160" X="10" Y="8" Text="On Behalf Item:" />
+                                    <ext:CheckBox ID="CheckBoxOnBehalfItem" runat="server" Width="160" X="175" Y="6" Disabled="true">
+                                        <Listeners>
+                                            <Check Fn="CheckOnBehalfItemClick" />
+                                        </Listeners>
+                                    </ext:CheckBox>
+                                    <ext:Label ID="Label1" runat="server" Width="160" X="10" Y="33" Text="My Business Trip @ eLeave:" />
+                                    <ext:Button ID="btnGeteLeave" runat="server" Text="Load" Width="60" X="175" Y="30"
                                         Disabled="true">
                                         <Listeners>
                                             <Click Fn="GetStatus" />
                                         </Listeners>
                                     </ext:Button>
-                                    <ext:Label ID="LabelText" runat="server" Text="<%$ Resources:LocalText,PersonLabel%>"
-                                        X="260" Y="13" />
-                                    <ext:Label ID="labelOwner" runat="server" X="320" Y="13" />
+
+                                    <ext:ComboBox ID="cbxPerson" runat="server" FieldLabel="<%$ Resources:LocalText,Owner%>"
+                                        LabelWidth="60" Width="200" X="240" Y="30" Editable="false" Disabled="true">
+                                        <DirectEvents>
+                                            <Select OnEvent="ChangePerson" Timeout="300000">
+                                                <EventMask ShowMask="true" CustomTarget="Panel3" Target="CustomTarget" />
+                                            </Select>
+                                        </DirectEvents>
+                                    </ext:ComboBox>
+
+                                    <%--<ext:Label ID="LabelText" runat="server" Text="<%$ Resources:LocalText,PersonLabel%>"
+                                        X="260" Y="33" />
+                                    <ext:Label ID="labelOwner" runat="server" X="320" Y="33" />--%>
                                     <ext:Label ID="Label16" runat="server" Text="<%$ Resources:LocalText,StationLabel%>"
-                                        X="450" Y="13" />
-                                    <ext:Label ID="labelStation" runat="server" X="510" Y="13" />
+                                        X="450" Y="33" />
+                                    <ext:Label ID="labelStation" runat="server" X="510" Y="33" />
                                     <ext:Label ID="Label11" runat="server" Text="<%$ Resources:LocalText,Department%>"
-                                        X="590" Y="13" />
-                                    <ext:Label ID="labelDepartment" runat="server" X="665" Y="13" />
-                                    <ext:Label ID="Label4" runat="server" X="10" Y="43" Text="<%$ Resources:LocalText,Currency%>" />
-                                    <ext:Label ID="LabelCurrency" runat="server" X="70" Y="43" />
-                                    <ext:Label ID="Label5" runat="server" Width="100" X="145" Y="43" Text="<%$ Resources:LocalText,TravelReport%>" />
-                                    <ext:FileUploadField ID="FileUploadField1" runat="server" Icon="Attach" X="235" Y="30"
+                                        X="590" Y="33" />
+                                    <ext:Label ID="labelDepartment" runat="server" X="665" Y="33" />
+                                    <ext:Label ID="Label4" runat="server" X="10" Y="63" Text="<%$ Resources:LocalText,Currency%>" />
+                                    <ext:Label ID="LabelCurrency" runat="server" X="70" Y="63" />
+                                    <ext:Label ID="Label5" runat="server" Width="100" X="145" Y="63" Text="<%$ Resources:LocalText,TravelReport%>" />
+                                    <ext:FileUploadField ID="FileUploadField1" runat="server" Icon="Attach" X="235" Y="50"
                                         Width="130" EmptyText="Select file." ButtonText="" />
-                                    <ext:Button ID="btnUploadReport" runat="server" X="378" Y="40" Icon="Add">
+                                    <ext:Button ID="btnUploadReport" runat="server" X="378" Y="60" Icon="Add">
                                         <DirectEvents>
                                             <Click OnEvent="UploadTravelReportClick" Before="if (FileUploadField1.getValue()=='') { Ext.Msg.alert('Error','Please select file.'); return false; } 
                                                     Ext.Msg.wait('Uploading your report...', 'Uploading');" Failure="Ext.Msg.show({ 
@@ -900,12 +957,12 @@
                                             </Click>
                                         </DirectEvents>
                                     </ext:Button>
-                                    <ext:Button ID="Button1" runat="server" X="403" Y="40" Icon="Delete">
+                                    <ext:Button ID="Button1" runat="server" X="403" Y="60" Icon="Delete">
                                         <Listeners>
                                             <Click Handler="linkTravelReport.setText('');hdReport.setValue('');" />
                                         </Listeners>
                                     </ext:Button>
-                                    <ext:HyperLink ID="linkTravelReport" runat="server" Text="" X="433" Y="43" Target="_blank" />
+                                    <ext:HyperLink ID="linkTravelReport" runat="server" Text="" X="433" Y="63" Target="_blank" />
                                     <%--<ext:ComboBox ID="cbxBudget" runat="server" FieldLabel="<%$ Resources:LocalText,BudgetOrNot%>"
                                         LabelWidth="60" Width="120" X="10" Y="70" Editable="False" SelectedIndex="1"
                                         Hidden="true">
@@ -919,7 +976,7 @@
                                             </Select>
                                         </DirectEvents>
                                     </ext:ComboBox>--%>
-                                    <ext:RadioGroup ID="RadioGroup1" runat="server" X="10" Y="70" Width="180" Hidden="true">
+                                    <ext:RadioGroup ID="RadioGroup1" runat="server" X="10" Y="90" Width="180" Hidden="true">
                                         <Items>
                                             <ext:Radio ID="Radio1" runat="server" BoxLabel="Budget" Width="60" />
                                             <ext:Radio ID="Radio2" runat="server" BoxLabel="Un-Budget" Width="100" />
@@ -930,10 +987,10 @@
                                             </Change>
                                         </DirectEvents>
                                     </ext:RadioGroup>
-                                    <ext:Label ID="Label17" runat="server" Width="100" X="145" Y="73" Text="<%$ Resources:LocalText,ScanFile%>" />
-                                    <ext:FileUploadField ID="FileUploadField2" runat="server" Icon="Attach" X="235" Y="38"
+                                    <ext:Label ID="Label17" runat="server" Width="100" X="145" Y="93" Text="<%$ Resources:LocalText,ScanFile%>" />
+                                    <ext:FileUploadField ID="FileUploadField2" runat="server" Icon="Attach" X="235" Y="58"
                                         Width="130" EmptyText="Select file." ButtonText="" />
-                                    <ext:Button ID="btnUploadScanFile" runat="server" X="378" Y="70" Icon="Add">
+                                    <ext:Button ID="btnUploadScanFile" runat="server" X="378" Y="90" Icon="Add">
                                         <DirectEvents>
                                             <Click OnEvent="UploadScanFileClick" Before="if (FileUploadField2.getValue()=='') { Ext.Msg.alert('Error','Please select file.'); return false; } 
                                                     Ext.Msg.wait('Uploading your file...', 'Uploading');" Failure="Ext.Msg.show({ 
@@ -947,17 +1004,17 @@
                                             </Click>
                                         </DirectEvents>
                                     </ext:Button>
-                                    <ext:Button ID="Button2" runat="server" X="403" Y="70" Icon="Delete">
+                                    <ext:Button ID="Button2" runat="server" X="403" Y="90" Icon="Delete">
                                         <Listeners>
                                             <Click Handler="linkScanFile.setText('');hdScanFile.setValue('');" />
                                         </Listeners>
                                     </ext:Button>
-                                    <ext:HyperLink ID="linkScanFile" runat="server" Text="" X="433" Y="73" Target="_blank" />
+                                    <ext:HyperLink ID="linkScanFile" runat="server" Text="" X="433" Y="93" Target="_blank" />
                                     <ext:TextField ID="txtRemark" runat="server" FieldLabel="<%$ Resources:LocalText,Remark%>"
-                                        LabelWidth="60" X="10" Y="100" Anchor="100%">
+                                        LabelWidth="60" X="10" Y="120" Anchor="100%">
                                     </ext:TextField>
                                     <ext:FieldSet ID="FieldSet5" runat="server" Title="On behalf of" Layout="AbsoluteLayout"
-                                        Height="63" Width="498" X="590" Y="29">
+                                        Height="65" Width="498" X="590" Y="49">
                                         <Items>
                                             <ext:ComboBox ID="cbxOnBehalfName" runat="server" X="0" Y="0" FieldLabel="Person"
                                                 LabelWidth="80" Width="220" DisplayField="Name" ValueField="UserID" Disabled="true">
@@ -990,8 +1047,8 @@
                                                     </KeyUp>
                                                 </DirectEvents>
                                             </ext:ComboBox>
-                                            <ext:Label ID="Label2" runat="server" X="240" Y="0" Text="<%$ Resources:LocalText,Department%>" />
-                                            <ext:Label ID="LabelDept" runat="server" X="325" Y="0" Text="" />
+                                            <ext:Label ID="Label2" runat="server" X="240" Y="5" Text="<%$ Resources:LocalText,Department%>" />
+                                            <ext:Label ID="LabelDept" runat="server" X="325" Y="5" Text="" />
                                             <ext:Label ID="Label21" runat="server" Text="<%$ Resources:LocalText,StationLabel%>"
                                                 X="0" Y="23" />
                                             <ext:Label ID="LabelUnit" runat="server" X="85" Y="23" Text="" />
@@ -1001,19 +1058,19 @@
                                         </Items>
                                     </ext:FieldSet>
                                     <ext:Button ID="btnAddDSTN" runat="server" Text="<%$ Resources:LocalText,NewDSTN%>"
-                                        X="10" Y="125" Width="120">
+                                        X="10" Y="145" Width="120">
                                         <Listeners>
                                             <Click Fn="ClearCol" Delay="50" />
                                         </Listeners>
                                     </ext:Button>
                                     <ext:Button ID="btnBudgetView" runat="server" Text="<%$ Resources:LocalText,BudgetReview%>"
-                                        X="140" Y="125" Width="120">
+                                        X="140" Y="145" Width="120">
                                         <Listeners>
                                             <Click Fn="LoadBudget" Delay="50" />
                                         </Listeners>
                                     </ext:Button>
                                     <ext:GridPanel ID="GridPanel2" runat="server" Title="<%$ Resources:LocalText,ExpenseList%>"
-                                        TrackMouseOver="false" Height="400" X="10" Y="150" AutoScroll="true">
+                                        TrackMouseOver="false" Height="400" X="10" Y="170" AutoScroll="true">
                                         <Store>
                                             <ext:Store ID="Store2" runat="server">
                                                 <Reader>
@@ -1067,7 +1124,7 @@
                                         </Items>
                                     </ext:Panel>--%>
                                     <ext:GridPanel ID="GridPanelBudget" runat="server" TrackMouseOver="false" Height="110"
-                                        X="10" Y="550" AutoScroll="true">
+                                        X="10" Y="570" AutoScroll="true">
                                         <Store>
                                             <ext:Store ID="StoreBudget" runat="server">
                                                 <Reader>
@@ -1087,30 +1144,30 @@
                                         </View>
                                     </ext:GridPanel>
                                     <ext:Button ID="btnSaveAndSend" runat="server" Text="<%$ Resources:LocalText,SaveApply%>"
-                                        X="10" Y="670" Width="120" Disabled="true">
+                                        X="10" Y="690" Width="120" Disabled="true">
                                         <Listeners>
                                             <Click Handler="SaveAll('ND');" Delay="50" />
                                         </Listeners>
                                     </ext:Button>
                                     <ext:Button ID="btnSaveDraft" runat="server" Text="<%$ Resources:LocalText,SaveAsDraft%>"
-                                        X="140" Y="670" Width="120">
+                                        X="140" Y="690" Width="120">
                                         <Listeners>
                                             <Click Handler="SaveAll('D');" Delay="50" />
                                         </Listeners>
                                     </ext:Button>
                                     <ext:Button ID="btnExport" runat="server" Text="<%$ Resources:LocalText,Export%>"
-                                        X="270" Y="670" Width="120" Icon="Report" Disabled="true">
+                                        X="270" Y="690" Width="120" Icon="Report" Disabled="true">
                                         <Listeners>
                                             <Click Fn="Preview" />
                                         </Listeners>
                                     </ext:Button>
                                     <ext:Button ID="btnCC" runat="server" Text="<%$ Resources:LocalText,CC%>" X="400"
-                                        Y="670" Width="120" Icon="Mail">
+                                        Y="690" Width="120" Icon="Mail">
                                         <Listeners>
                                             <Click Fn="GetCCList" />
                                         </Listeners>
                                     </ext:Button>
-                                    <ext:Label ID="labelInfo" runat="server" Text="" X="20" Y="700">
+                                    <ext:Label ID="labelInfo" runat="server" Text="" X="20" Y="720">
                                     </ext:Label>
                                 </Items>
                             </ext:Panel>
