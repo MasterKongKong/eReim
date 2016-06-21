@@ -247,12 +247,13 @@
                                  <ext:Label ID="DSD" runat="server" X="10" Y="10" Text="" FieldLabel="1. 如果需要同时分配个人和部门预算，请点击Personal 图标，分配个人预算后，部门其它人的共享预算数值请设置到“Other+部门名称”。"  LabelWidth="760" Width="760"/>
                                   <ext:Label ID="Label1" runat="server" X="10" Y="25" Text="" FieldLabel="2. 如果仅仅需要分配部门预算，请点击Department 图标。需要注意，预算按照部门分配后，不能再分配个人预算。"  LabelWidth="760" Width="760"/>
                                     <ext:ComboBox ID="DLYears" runat="server" FieldLabel="Years" LabelWidth="35" Width="115"
-                                        X="10" Y="58" SelectedIndex="3">
+                                        X="10" Y="58" SelectedIndex="4">
                                         <Items>
                                             <ext:ListItem Text="2012"  />
                                             <ext:ListItem Text="2013" />
                                             <ext:ListItem Text="2014" />
                                             <ext:ListItem Text="2015" />
+                                            <ext:ListItem Text="2016" />
                                         </Items>
                                        <DirectEvents>
                                        <Select OnEvent="Chanage_Search"/>

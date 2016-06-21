@@ -33,7 +33,7 @@
         </asp:ScriptManager>
         <rsweb:ReportViewer ID="ReportViewer1" runat="server" Font-Names="Verdana" Font-Size="8pt"
             InteractiveDeviceInfos="(集合)" WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt"
-            Width="100%" Height="100%" PageCountMode="Actual" ShowRefreshButton="False" ZoomMode="PageWidth" ShowBackButton="true" SizeToReportContent="True">
+            Width="100%" Height="100%" PageCountMode="Actual" ShowRefreshButton="False" ZoomMode="PageWidth" ShowBackButton="true" SizeToReportContent="true">
         </rsweb:ReportViewer>
     </div>
     </form>

@@ -34,7 +34,7 @@
             });
         };
         var LoadBudget = function () {
-            if ($("#CheckBoxOnBehalfItem").attr("checked")!= "checked"&&hdOwner.getValue().toString() == '') {
+            if ($("#CheckBoxOnBehalfItem").attr("checked")!= "checked"&&hdOwnerID.getValue().toString() == '') {
                 if (getCookie('lang') != undefined && getCookie('lang').toLowerCase() == 'zh-cn') {
                     Ext.Msg.show({ title: 'Message', msg: '请从eLeave选择出差记录.', buttons: { ok: 'Ok'} });
                 }
@@ -555,16 +555,20 @@
     var PasseLeaveData = function (command, record, rowIndex) {
         //            dfBdate.setValue(record.data.leaveStart1);
         //            dfEdate.setValue(record.data.leaveEnd1);
-       
+
         //        labelOwner.setText(record.data.Owner);
         hdOwner.setValue(record.data.Owner);
         hdOwnerID.setValue(record.data.OwnerID);
+        //160616 Andy Kang
+        cbxPerson.setValue(record.data.OwnerID);
+        cbxPerson.disable();
+
 
         hdLeaveDate1.setValue(record.data.leaveStart1);
         hdLeaveDate2.setValue(record.data.leaveEnd1);
         hdDSTN.setValue(record.data.Destination);
 
-        
+
         labelStation.setText(record.data.Station);
         hdStation.setValue(record.data.Station)
         labelDepartment.setText(record.data.Department);
@@ -750,6 +754,7 @@
             $("#LabelDept").text("");
             $("#LabelUnit").text("");
             $("#LabelCost").text("");
+            StoreBudget.removeAll();
 
         }
         //alert($("#CheckBoxOnBehalfItem").attr("checked"));

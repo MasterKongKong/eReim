@@ -423,7 +423,7 @@ namespace eReimbursement
                                         //预算
                                         //140226 显示预算
                                         DataTable dtbudget = new DataTable();
-                                        dtbudget.Columns.Add("RequestID", typeof(System.Int16));
+                                        dtbudget.Columns.Add("RequestID", typeof(System.Int32));
                                         dtbudget.Columns.Add("Status", typeof(System.Int16));
                                         dtbudget.Columns.Add("EName", typeof(System.String));
                                         dtbudget.Columns.Add("COACode", typeof(System.String));
@@ -449,7 +449,7 @@ namespace eReimbursement
                                         //取得本币与成本中心汇率转换
                                         decimal rate = 1;
                                         string CurLocal = dtall.Rows[0]["Cur"].ToString();
-                                        string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtall.Rows[0]["TSation"].ToString());
+                                        string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtf.Rows[0]["Station2"].ToString());
                                         if (CurLocal != CurBudget)
                                         {
                                             rate = DIMERCO.SDK.Utilities.LSDK.GetBudgetConverRate(CurLocal, CurBudget, Convert.ToDateTime(dtA.Rows[0]["BudgetDate"].ToString()).Year);
@@ -552,7 +552,7 @@ namespace eReimbursement
                                             SqlCommand scdetail = sqlConn.CreateCommand();
                                             scdetail.CommandText = "Insert into Budget_Complete (FormType,RequestID,Status,COACode,EName,LocalCur,CenterCur,Rate,LocalAmount,PA,CA,PU,PB,PPercent,DU,DB,DPercent,SU,SB,SPercent) values (@FormType,@RequestID,@Status,@COACode,@EName,@LocalCur,@CenterCur,@Rate,@LocalAmount,@PA,@CA,@PU,@PB,@PPercent,@DU,@DB,@DPercent,@SU,@SB,@SPercent)";
                                             SqlParameter spdetail = new SqlParameter("@RequestID", SqlDbType.Int);
-                                            spdetail.Value = Convert.ToInt16(ID);
+                                            spdetail.Value = Convert.ToInt32(ID);
                                             scdetail.Parameters.Add(spdetail);
 
                                             spdetail = new SqlParameter("@FormType", SqlDbType.VarChar, 10);
@@ -673,7 +673,7 @@ namespace eReimbursement
                                         DataTable dtf = dbc.GetData("eReimbursement", sqlf);
                                         //140226 显示预算
                                         DataTable dtbudget = new DataTable();
-                                        dtbudget.Columns.Add("RequestID", typeof(System.Int16));
+                                        dtbudget.Columns.Add("RequestID", typeof(System.Int32));
                                         dtbudget.Columns.Add("Year", typeof(System.String));
                                         dtbudget.Columns.Add("Status", typeof(System.Int16));
                                         dtbudget.Columns.Add("EName", typeof(System.String));
@@ -701,7 +701,7 @@ namespace eReimbursement
                                         //取得本币与成本中心汇率转换
                                         decimal rate = 1;
                                         string CurLocal = dtall.Rows[0]["Cur"].ToString();
-                                        string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtall.Rows[0]["TSation"].ToString());
+                                        string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtf.Rows[0]["Station2"].ToString());
                                         //if (CurLocal != CurBudget)
                                         //{
                                         //    rate = DIMERCO.SDK.Utilities.LSDK.GetBudgetConverRate(CurLocal, CurBudget, Convert.ToInt16(dtA.Rows[0]["Year"].ToString()));
@@ -820,7 +820,7 @@ namespace eReimbursement
                                             SqlCommand scdetail = sqlConn.CreateCommand();
                                             scdetail.CommandText = "Insert into Budget_Complete (Year,FormType,RequestID,Status,COACode,EName,LocalCur,CenterCur,Rate,LocalAmount,PU,PB,PPercent,DU,DB,DPercent,SU,SB,SPercent) values (@Year,@FormType,@RequestID,@Status,@COACode,@EName,@LocalCur,@CenterCur,@Rate,@LocalAmount,@PU,@PB,@PPercent,@DU,@DB,@DPercent,@SU,@SB,@SPercent)";
                                             SqlParameter spdetail = new SqlParameter("@RequestID", SqlDbType.Int);
-                                            spdetail.Value = Convert.ToInt16(ID);
+                                            spdetail.Value = Convert.ToInt32(ID);
                                             scdetail.Parameters.Add(spdetail);
 
                                             spdetail = new SqlParameter("@Year", SqlDbType.Int);
@@ -950,7 +950,7 @@ namespace eReimbursement
                                     //预算
                                     //140226 显示预算
                                     DataTable dtbudget = new DataTable();
-                                    dtbudget.Columns.Add("RequestID", typeof(System.Int16));
+                                    dtbudget.Columns.Add("RequestID", typeof(System.Int32));
                                     dtbudget.Columns.Add("Status", typeof(System.Int16));
                                     dtbudget.Columns.Add("EName", typeof(System.String));
                                     dtbudget.Columns.Add("COACode", typeof(System.String));
@@ -976,7 +976,7 @@ namespace eReimbursement
                                     //取得本币与成本中心汇率转换
                                     decimal rate = 1;
                                     string CurLocal = dtall.Rows[0]["Cur"].ToString();
-                                    string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtall.Rows[0]["TSation"].ToString());
+                                    string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtf.Rows[0]["Station2"].ToString());
                                     if (CurLocal != CurBudget)
                                     {
                                         rate = DIMERCO.SDK.Utilities.LSDK.GetBudgetConverRate(CurLocal, CurBudget, Convert.ToDateTime(dtA.Rows[0]["BudgetDate"].ToString()).Year);
@@ -1093,7 +1093,7 @@ namespace eReimbursement
                                     DataTable dtf = dbc.GetData("eReimbursement", sqlf);
                                     //140226 显示预算
                                     DataTable dtbudget = new DataTable();
-                                    dtbudget.Columns.Add("RequestID", typeof(System.Int16));
+                                    dtbudget.Columns.Add("RequestID", typeof(System.Int32));
                                     dtbudget.Columns.Add("Year", typeof(System.String));
                                     dtbudget.Columns.Add("Status", typeof(System.Int16));
                                     dtbudget.Columns.Add("EName", typeof(System.String));
@@ -1121,7 +1121,7 @@ namespace eReimbursement
                                     //取得本币与成本中心汇率转换
                                     decimal rate = 1;
                                     string CurLocal = dtall.Rows[0]["Cur"].ToString();
-                                    string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtall.Rows[0]["TSation"].ToString());
+                                    string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtf.Rows[0]["Station2"].ToString());
                                     
 
                                     //合计数据
@@ -1747,12 +1747,12 @@ namespace eReimbursement
                 {
                     mail.To = dsowner.Tables[0].Rows[0]["eMail"].ToString();
                 }
-                string testmailstr = "";
-                //testmailstr += "<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />";
-                //testmailstr += "<div>";
+                //mail.To = mailto;
+                //mail.Cc = mailcc;
 
-                mail.To = mailto;
-                mail.Cc = mailcc;
+                string testmailstr = "";
+                testmailstr += "<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />";
+                testmailstr += "<div>";
 
 
 

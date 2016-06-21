@@ -641,6 +641,9 @@ namespace eReimbursement
                                 ReportParameter rpDepartment = new ReportParameter("Department", dt1.Rows[0]["Department"].ToString() + " @ " + dt1.Rows[0]["Station"].ToString());
                                 ReportViewer1.LocalReport.SetParameters(new ReportParameter[] { rpDepartment });
 
+                                ReportParameter rpDocNo = new ReportParameter("DocNo", dt1.Rows[0]["No"].ToString());
+                                ReportViewer1.LocalReport.SetParameters(new ReportParameter[] { rpDocNo });
+
                                 string budget = dt1.Rows[0]["Budget"].ToString() == "1" ? "Budgeted" : "UnBudgeted";
                                 ReportParameter rpBudget = new ReportParameter("Budget", budget);
                                 ReportViewer1.LocalReport.SetParameters(new ReportParameter[] { rpBudget });

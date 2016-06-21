@@ -172,6 +172,7 @@
                                     <ext:ComboBox ID="cbxYear" runat="server" FieldLabel="Year" Width="120" X="10" Y="37"
                                         ForceSelection="true" LabelWidth="30" SelectedIndex="0" Editable="false">
                                         <Items>
+                                            <ext:ListItem Text="2016" />
                                             <ext:ListItem Text="2015" />
                                             <ext:ListItem Text="2014" />
                                             <ext:ListItem Text="2013" />

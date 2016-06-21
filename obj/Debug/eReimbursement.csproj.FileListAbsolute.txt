@@ -187,3 +187,10 @@ D:\Downloads\eReim\obj\Debug\RdlCompile.cache
 D:\Downloads\eReim\obj\Debug\RdlCompile.compiled
 D:\Downloads\eReim\obj\Debug\eReimbursement.dll
 D:\Downloads\eReim\obj\Debug\eReimbursement.pdb
+D:\Projects\eReim test 160621\eReim\bin\eReimbursement.dll
+D:\Projects\eReim test 160621\eReim\bin\eReimbursement.pdb
+D:\Projects\eReim test 160621\eReim\obj\Debug\eReimbursement.csprojResolveAssemblyReference.cache
+D:\Projects\eReim test 160621\eReim\obj\Debug\RdlCompile.cache
+D:\Projects\eReim test 160621\eReim\obj\Debug\RdlCompile.compiled
+D:\Projects\eReim test 160621\eReim\obj\Debug\eReimbursement.dll
+D:\Projects\eReim test 160621\eReim\obj\Debug\eReimbursement.pdb

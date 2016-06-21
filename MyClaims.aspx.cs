@@ -19,14 +19,7 @@ namespace eReimbursement
         {
             if (!X.IsAjaxRequest)
             {
-                //DataSet dsuser = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList("A0703");
-                //if (dsuser.Tables[0].Rows.Count == 1)
-                //{
-                //    DataTable dt1 = dsuser.Tables[0];
-                //    dt1 = null;
-                //}
-
-                //DataTable newr = Comm.RtnEB("A0703", "Administration", "DIMYVR", "DIMYVR", "62010910", "2014", "1");
+                //DataTable newr = Comm.RtnEB("A5200", "Administration", "GCRSHA", "DFSSHA", "62010910", "2014", "1");
                 //DataSet ds3 = DIMERCO.SDK.Utilities.LSDK.getStationHierarchy();
                 //for (int i = 0; i < ds3.Tables[0].Rows.Count; i++)
                 //{
@@ -71,84 +64,53 @@ namespace eReimbursement
                 {
                     ScriptManager.RegisterStartupScript(this, GetType(), "", "$('div.gn_person ul.q-menubox li:eq(0) a').text('" + Request.Cookies.Get("eReimUserName").Value + "');", true); X.AddScript("loginWindow.hide();Panel1.enable();");
                 }
+
                 //准备下拉菜单内容
                 Ext.Net.ListItem li = new Ext.Net.ListItem(Request.Cookies.Get("eReimUserName").Value, Request.Cookies.Get("eReimUserID").Value);
                 cbxPerson.Items.Add(li);
                 string sqlitem = "select * from Eagent where [St]=1 and [PAgentID]='" + Request.Cookies.Get("eReimUserID").Value + "'";
-
-                try
+                DataTable dtitem = dbc.GetData("eReimbursement", sqlitem);
+                int itemcount = 0;
+                for (int j = 0; j < dtitem.Rows.Count; j++)
                 {
-                    DataTable dtitem = new DataTable();
-                    dtitem = dbc.GetData("eReimbursement", sqlitem);
-                    int itemcount = 0;
-                    if (dtitem!=null)
+                    string sqlpara = sqlitem;
+                    bool d1 = true;
+                    bool d2 = false;
+                    if (dtitem.Rows[j][5].ToString() != "")
                     {
-                        for (int j = 0; j < dtitem.Rows.Count; j++)
+                        //sqlpara += " and getdate()>='" + dtitem.Rows[j]["Bdate"].ToString() + "' ";
+                        if (DateTime.Now >= Convert.ToDateTime(dtitem.Rows[j][5].ToString()))
                         {
-                            string sqlpara = sqlitem;
-                            bool d1 = true;
-                            bool d2 = false;
-                            if (dtitem.Rows[j][5].ToString() != "")
-                            {
-                                //sqlpara += " and getdate()>='" + dtitem.Rows[j]["Bdate"].ToString() + "' ";
-                                if (DateTime.Now >= Convert.ToDateTime(dtitem.Rows[j][5].ToString()))
-                                {
-                                    d1 = true;
-                                }
-                                else
-                                {
-                                    d1 = false;
-                                }
-                            }
-                            if (dtitem.Rows[j][6].ToString() != "")
-                            {
-                                //sqlpara += " and getdate()<='" + dtitem.Rows[j]["Edate"].ToString() + "' ";
-                                if (DateTime.Now <= Convert.ToDateTime(dtitem.Rows[j][6].ToString()))
-                                {
-                                    d2 = true;
-                                }
-                                else
-                                {
-                                    d2 = false;
-                                }
-                            }
-                            if (d1 && d2)
-                            {
-                                li = new Ext.Net.ListItem(dtitem.Rows[j][1].ToString(), dtitem.Rows[j][2].ToString());
-                                cbxPerson.Items.Add(li);
-                                itemcount++;
-                            }
+                            d1 = true;
                         }
-                        if (itemcount < 1)
+                        else
                         {
-                            cbxPerson.SelectedIndex = 0;
+                            d1 = false;
                         }
                     }
-                    else
+                    if (dtitem.Rows[j][6].ToString() != "")
                     {
-                        DIMERCO.SDK.MailMsg mail = new DIMERCO.SDK.MailMsg();
-
-                        mail.FromDispName = "eReimbursement";
-                        mail.From = "DIC2@dimerco.com";
-                        mail.To = "Andy_Kang@dimerco.com";
-                        mail.Title = "eReimbursement Bug" + DateTime.Now.ToString("yyyy/MM/dd hh:mm:dd");
-                        mail.Body = "<div>Error<br/>" + sqlitem + "</div>";
-                        mail.Send();
+                        //sqlpara += " and getdate()<='" + dtitem.Rows[j]["Edate"].ToString() + "' ";
+                        if (DateTime.Now <= Convert.ToDateTime(dtitem.Rows[j][6].ToString()))
+                        {
+                            d2 = true;
+                        }
+                        else
+                        {
+                            d2 = false;
+                        }
                     }
-                    
+                    if (d1 && d2)
+                    {
+                        li = new Ext.Net.ListItem(dtitem.Rows[j][1].ToString(), dtitem.Rows[j][2].ToString());
+                        cbxPerson.Items.Add(li);
+                        itemcount++;
+                    }
                 }
-                catch (Exception ex)
+                if (itemcount < 1)
                 {
-                    DIMERCO.SDK.MailMsg mail = new DIMERCO.SDK.MailMsg();
-
-                    mail.FromDispName = "eReimbursement";
-                    mail.From = "DIC2@dimerco.com";
-                    mail.To = "Andy_Kang@dimerco.com";
-                    mail.Title = "eReimbursement Bug" + DateTime.Now.ToString("yyyy/MM/dd hh:mm:dd");
-                    mail.Body = ex.Message + "<br/>" + ex.InnerException.ToString() + sqlitem + "</div>";
-                    mail.Send();
+                    cbxPerson.SelectedIndex = 0;
                 }
-                
                 string sqltype = "";
                 string sqldraft = "";
                 if (Request.Cookies["lang"] != null && Request.Cookies["lang"].Value.ToLower() == "zh-cn")
@@ -249,260 +211,197 @@ namespace eReimbursement
         }
         protected void BindData(string sql)
         {
-            try
+            sql += " and (PersonID='" + Request.Cookies.Get("eReimUserID").Value + "' or CreadedByID='" + Request.Cookies.Get("eReimUserID").Value + "' ";
+            //判断是否为代理人
+            cs.DBCommand dbc = new cs.DBCommand();
+            string ApplyIDByAgent = "";
+            string sqlagent = "select * from Eagent where [St]=1 and [PAgentID]='" + Request.Cookies.Get("eReimUserID").Value + "' and getdate()<=Edate and getdate()>=Bdate";
+            DataTable dtagent = dbc.GetData("eReimbursement", sqlagent);
+            if (dtagent.Rows.Count > 0)
             {
-                sql += " and (PersonID='" + Request.Cookies.Get("eReimUserID").Value + "' or CreadedByID='" + Request.Cookies.Get("eReimUserID").Value + "' ";
-                //判断是否为代理人
-                cs.DBCommand dbc = new cs.DBCommand();
-                string ApplyIDByAgent = "";
-                string sqlagent = "select * from Eagent where [St]=1 and [PAgentID]='" + Request.Cookies.Get("eReimUserID").Value + "' and getdate()<=Edate and getdate()>=Bdate";
-                DataTable dtagent = dbc.GetData("eReimbursement", sqlagent);
-                if (dtagent!=null && dtagent.Rows.Count > 0)
+                ApplyIDByAgent += " or PersonID in (";
+                for (int g = 0; g < dtagent.Rows.Count; g++)
                 {
-                    ApplyIDByAgent += " or PersonID in (";
-                    for (int g = 0; g < dtagent.Rows.Count; g++)
+                    if (g != dtagent.Rows.Count - 1)
                     {
-                        if (g != dtagent.Rows.Count - 1)
-                        {
-                            ApplyIDByAgent += "'" + dtagent.Rows[g]["OwnerID"].ToString() + "',";
-                        }
-                        else
-                        {
-                            ApplyIDByAgent += "'" + dtagent.Rows[g]["OwnerID"].ToString() + "'";
-                        }
+                        ApplyIDByAgent += "'" + dtagent.Rows[g]["OwnerID"].ToString() + "',";
                     }
-                    ApplyIDByAgent += ")";
+                    else
+                    {
+                        ApplyIDByAgent += "'" + dtagent.Rows[g]["OwnerID"].ToString() + "'";
+                    }
                 }
-
-                sql += ApplyIDByAgent + ")";
-
-                string sql1 = "select t1.*";
-                if (Request.Cookies["lang"] != null && Request.Cookies["lang"].Value.ToLower() == "zh-cn")
-                {
-                    sql1 += ",[Status1]=TDicStatus.CText,[Type1]=TDicMainType.CText,[Draft1]=TDicType.CText";
-                }
-                else
-                {
-                    sql1 += ",[Status1]=TDicStatus.EText,[Type1]=TDicMainType.EText,[Draft1]=TDicType.EText";
-                }
-                //if (Request.Cookies["lang"] != null)
-                //{
-                //    string lang = Request.Cookies["lang"].Value;
-                //    if (lang.ToLower() == "en-us")
-                //    {
-                //        PagingToolbar1.DisplayMsg = "Displaying items {0} - {1} of {2}";
-                //        ResourceManager1.Locale = "en-US";
-                //        sql1 += ",[Status1]=TDicStatus.EText,[Type1]=TDicMainType.EText,[Draft1]=TDicType.EText";
-                //    }
-                //    else
-                //    {
-                //        PagingToolbar1.DisplayMsg = "显示 {0} - {1} of {2}";
-                //        ResourceManager1.Locale = "zh-CN";
-                //        sql1 += ",[Status1]=TDicStatus.CText,[Type1]=TDicMainType.CText,[Draft1]=TDicType.CText";
-                //    }
-                //}
-                //else
-                //{
-                //    sql1 += ",[Status1]=TDicStatus.CText,[Type1]=TDicMainType.CText,[Draft1]=TDicType.CText";
-                //}
-                sql1 += " from (select [Draft]=case when [Status]=0 then 1 else 0 end,* from V_Eflow_ETravel where FlowID>16097 and (Active=1 or Active=2) " + sql + ") t1";
-                sql1 += " left join (select * from Edic where KeyValue='MainType') TDicMainType on TDicMainType.CValue=t1.Type";
-                sql1 += " left join (select * from Edic where KeyValue='Status') TDicStatus on TDicStatus.CValue=t1.Status";
-                sql1 += " left join (select * from Edic where KeyValue='Type') TDicType on TDicType.CValue=t1.Draft  order by FlowID desc";
-
-                DataTable dtdetail = new DataTable();
-                dtdetail = dbc.GetData("eReimbursement", sql1);
-                DataTable dtnew = new DataTable();
-                dtnew.Columns.Add("FlowID", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("No", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Type", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Station", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Department", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Person", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("CreadedBy", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("CreadedDate", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Tamount", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Step", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Status", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Approver", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("ApproveDate", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Remark", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("ApproverID", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Draft", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("RequestID", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Status1", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Type1", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("Draft1", System.Type.GetType("System.String"));
-                dtnew.Columns.Add("ApplyDate", System.Type.GetType("System.String"));
-                for (int i = 0; i < dtdetail.Rows.Count; i++)
-                {
-                    DataRow dr = dtnew.NewRow();
-                    dr["FlowID"] = dtdetail.Rows[i]["FlowID"].ToString();
-                    dr["No"] = dtdetail.Rows[i]["No"].ToString();
-                    dr["Type"] = dtdetail.Rows[i]["Type"].ToString();
-                    dr["Station"] = dtdetail.Rows[i]["Station"].ToString();
-                    dr["Department"] = dtdetail.Rows[i]["Department"].ToString();
-                    dr["Person"] = dtdetail.Rows[i]["Person"].ToString();
-                    dr["CreadedBy"] = dtdetail.Rows[i]["CreadedBy"].ToString();
-                    dr["CreadedDate"] = dtdetail.Rows[i]["CreadedDate"].ToString() == "" ? "" : Convert.ToDateTime(dtdetail.Rows[i]["CreadedDate"].ToString()).ToString("yyyy/MM/dd");
-                    dr["Tamount"] = dtdetail.Rows[i]["Tamount"].ToString();
-                    dr["Step"] = dtdetail.Rows[i]["Step"].ToString();
-                    dr["Status"] = dtdetail.Rows[i]["Status"].ToString();
-                    dr["Approver"] = dtdetail.Rows[i]["Approver"].ToString();
-                    dr["ApproveDate"] = dtdetail.Rows[i]["ApproveDate"].ToString() == "" ? "" : Convert.ToDateTime(dtdetail.Rows[i]["ApproveDate"].ToString()).ToString("yyyy/MM/dd");
-                    dr["Remark"] = dtdetail.Rows[i]["Remark"].ToString();
-                    dr["ApproverID"] = dtdetail.Rows[i]["ApproverID"].ToString();
-                    dr["Draft1"] = dtdetail.Rows[i]["Draft1"].ToString();
-                    dr["Draft"] = dtdetail.Rows[i]["Draft"].ToString();
-                    dr["RequestID"] = dtdetail.Rows[i]["RequestID"].ToString();
-                    dr["Status1"] = dtdetail.Rows[i]["Status1"].ToString();
-                    dr["Type1"] = dtdetail.Rows[i]["Type1"].ToString();
-                    dr["ApplyDate"] = Convert.ToDateTime(dtdetail.Rows[i]["ApplyDate"].ToString()).ToString("yyyy/MM/dd");
-                    dtnew.Rows.Add(dr);
-                }
-                Store1.DataSource = dtnew;
-                Store1.DataBind();
-                if (dtdetail.Rows.Count > 0)
-                {
-                    X.AddScript("btnExport.enable();");
-                }
+                ApplyIDByAgent += ")";
             }
-            catch (Exception ex)
-            {
-                DIMERCO.SDK.MailMsg mail = new DIMERCO.SDK.MailMsg();
 
-                mail.FromDispName = "eReimbursement";
-                mail.From = "DIC2@dimerco.com";
-                mail.To = "Andy_Kang@dimerco.com";
-                mail.Title = "eReimbursement Bug" + DateTime.Now.ToString("yyyy/MM/dd hh:mm:dd");
-                mail.Body = ex.Message + "<br/>" + ex.InnerException.ToString() + "</div>";
-                mail.Send();
+            sql += ApplyIDByAgent + ")";
+
+            string sql1 = "select t1.*";
+            if (Request.Cookies["lang"] != null && Request.Cookies["lang"].Value.ToLower() == "zh-cn")
+            {
+                sql1 += ",[Status1]=TDicStatus.CText,[Type1]=TDicMainType.CText,[Draft1]=TDicType.CText";
+            }
+            else
+            {
+                sql1 += ",[Status1]=TDicStatus.EText,[Type1]=TDicMainType.EText,[Draft1]=TDicType.EText";
+            }
+            //if (Request.Cookies["lang"] != null)
+            //{
+            //    string lang = Request.Cookies["lang"].Value;
+            //    if (lang.ToLower() == "en-us")
+            //    {
+            //        PagingToolbar1.DisplayMsg = "Displaying items {0} - {1} of {2}";
+            //        ResourceManager1.Locale = "en-US";
+            //        sql1 += ",[Status1]=TDicStatus.EText,[Type1]=TDicMainType.EText,[Draft1]=TDicType.EText";
+            //    }
+            //    else
+            //    {
+            //        PagingToolbar1.DisplayMsg = "显示 {0} - {1} of {2}";
+            //        ResourceManager1.Locale = "zh-CN";
+            //        sql1 += ",[Status1]=TDicStatus.CText,[Type1]=TDicMainType.CText,[Draft1]=TDicType.CText";
+            //    }
+            //}
+            //else
+            //{
+            //    sql1 += ",[Status1]=TDicStatus.CText,[Type1]=TDicMainType.CText,[Draft1]=TDicType.CText";
+            //}
+            sql1 += " from (select [Draft]=case when [Status]=0 then 1 else 0 end,* from V_Eflow_ETravel where FlowID>16097 and (Active=1 or Active=2) " + sql + ") t1";
+            sql1 += " left join (select * from Edic where KeyValue='MainType') TDicMainType on TDicMainType.CValue=t1.Type";
+            sql1 += " left join (select * from Edic where KeyValue='Status') TDicStatus on TDicStatus.CValue=t1.Status";
+            sql1 += " left join (select * from Edic where KeyValue='Type') TDicType on TDicType.CValue=t1.Draft  order by FlowID desc";
+
+            DataTable dtdetail = new DataTable();
+            dtdetail = dbc.GetData("eReimbursement", sql1);
+            DataTable dtnew = new DataTable();
+            dtnew.Columns.Add("FlowID", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("No", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Type", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Station", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Department", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Person", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("CreadedBy", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("CreadedDate", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Tamount", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Step", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Status", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Approver", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("ApproveDate", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Remark", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("ApproverID", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Draft", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("RequestID", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Status1", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Type1", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("Draft1", System.Type.GetType("System.String"));
+            dtnew.Columns.Add("ApplyDate", System.Type.GetType("System.String"));
+            for (int i = 0; i < dtdetail.Rows.Count; i++)
+            {
+                DataRow dr = dtnew.NewRow();
+                dr["FlowID"] = dtdetail.Rows[i]["FlowID"].ToString();
+                dr["No"] = dtdetail.Rows[i]["No"].ToString();
+                dr["Type"] = dtdetail.Rows[i]["Type"].ToString();
+                dr["Station"] = dtdetail.Rows[i]["Station"].ToString();
+                dr["Department"] = dtdetail.Rows[i]["Department"].ToString();
+                dr["Person"] = dtdetail.Rows[i]["Person"].ToString();
+                dr["CreadedBy"] = dtdetail.Rows[i]["CreadedBy"].ToString();
+                dr["CreadedDate"] = dtdetail.Rows[i]["CreadedDate"].ToString() == "" ? "" : Convert.ToDateTime(dtdetail.Rows[i]["CreadedDate"].ToString()).ToString("yyyy/MM/dd");
+                dr["Tamount"] = dtdetail.Rows[i]["Tamount"].ToString();
+                dr["Step"] = dtdetail.Rows[i]["Step"].ToString();
+                dr["Status"] = dtdetail.Rows[i]["Status"].ToString();
+                dr["Approver"] = dtdetail.Rows[i]["Approver"].ToString();
+                dr["ApproveDate"] = dtdetail.Rows[i]["ApproveDate"].ToString() == "" ? "" : Convert.ToDateTime(dtdetail.Rows[i]["ApproveDate"].ToString()).ToString("yyyy/MM/dd");
+                dr["Remark"] = dtdetail.Rows[i]["Remark"].ToString();
+                dr["ApproverID"] = dtdetail.Rows[i]["ApproverID"].ToString();
+                dr["Draft1"] = dtdetail.Rows[i]["Draft1"].ToString();
+                dr["Draft"] = dtdetail.Rows[i]["Draft"].ToString();
+                dr["RequestID"] = dtdetail.Rows[i]["RequestID"].ToString();
+                dr["Status1"] = dtdetail.Rows[i]["Status1"].ToString();
+                dr["Type1"] = dtdetail.Rows[i]["Type1"].ToString();
+                dr["ApplyDate"] = Convert.ToDateTime(dtdetail.Rows[i]["ApplyDate"].ToString()).ToString("yyyy/MM/dd");
+                dtnew.Rows.Add(dr);
+            }
+            Store1.DataSource = dtnew;
+            Store1.DataBind();
+            if (dtdetail.Rows.Count > 0)
+            {
+                X.AddScript("btnExport.enable();");
             }
         }
         protected void btnLogin_Click(object sender, DirectEventArgs e)
         {
-            try
+            cs.DBCommand dbc = new cs.DBCommand();
+            DataSet ds1 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(tfUserID.Text);
+            if (ds1.Tables[0].Rows.Count == 1)
             {
-                cs.DBCommand dbc = new cs.DBCommand();
-                DataSet ds = new DataSet();
-                bool user = DIMERCO.SDK.Utilities.ReSM.CheckUserInfo(tfUserID.Text.Trim(), tfPW.Text.Trim(), ref ds);
-                if (ds.Tables[0].Rows.Count == 1)
+                DataTable dt1 = ds1.Tables[0];
+                Session["UserID"] = dt1.Rows[0]["UserID"].ToString();
+                Session["UserName"] = dt1.Rows[0]["fullName"].ToString();
+                Session["Station"] = dt1.Rows[0]["stationCode"].ToString();
+                Session["Department"] = dt1.Rows[0]["CRPDepartmentName"].ToString();
+                Session["CostCenter"] = dt1.Rows[0]["CostCenter"].ToString();
+                if (Request.Cookies["eReimUserID"] != null)
                 {
-                    DataTable dtuser = ds.Tables[0];
-                    Session["UserID"] = dtuser.Rows[0]["UserID"].ToString();
-                    if (Request.Cookies["eReimUserID"] != null)
-                    {
-                        Response.Cookies["eReimUserID"].Value = dtuser.Rows[0]["UserID"].ToString();  //将值写入到客户端硬盘Cookie
-                        Response.Cookies["eReimUserID"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
-                    }
-                    else
-                    {
-                        HttpCookie cookie = new HttpCookie("eReimUserID", dtuser.Rows[0]["UserID"].ToString());
-                        cookie.Expires = DateTime.Now.AddHours(12);
-                        Response.Cookies.Add(cookie);
-                    }
-
-                    DataSet ds1 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(dtuser.Rows[0]["UserID"].ToString());
-                    if (ds1.Tables[0].Rows.Count == 1)
-                    {
-                        DataTable dt1 = ds1.Tables[0];
-                        Session["UserName"] = dt1.Rows[0]["fullName"].ToString();
-                        Session["Station"] = dt1.Rows[0]["stationCode"].ToString();
-                        Session["Department"] = dt1.Rows[0]["CRPDepartmentName"].ToString();
-                        Session["CostCenter"] = dt1.Rows[0]["CostCenter"].ToString();
-                        if (Request.Cookies["eReimUserName"] != null)
-                        {
-                            Response.Cookies["eReimUserName"].Value = dt1.Rows[0]["fullName"].ToString();  //将值写入到客户端硬盘Cookie
-                            Response.Cookies["eReimUserName"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
-                        }
-                        else
-                        {
-                            HttpCookie cookie = new HttpCookie("eReimUserName", dt1.Rows[0]["fullName"].ToString());
-                            cookie.Expires = DateTime.Now.AddHours(12);
-                            Response.Cookies.Add(cookie);
-                        }
-                        if (Request.Cookies["eReimStation"] != null)
-                        {
-                            Response.Cookies["eReimStation"].Value = dt1.Rows[0]["stationCode"].ToString();  //将值写入到客户端硬盘Cookie
-                            Response.Cookies["eReimStation"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
-                        }
-                        else
-                        {
-                            HttpCookie cookie = new HttpCookie("eReimStation", dt1.Rows[0]["stationCode"].ToString());
-                            cookie.Expires = DateTime.Now.AddHours(12);
-                            Response.Cookies.Add(cookie);
-                        }
-                        if (Request.Cookies["eReimDepartment"] != null)
-                        {
-                            Response.Cookies["eReimDepartment"].Value = dt1.Rows[0]["CRPDepartmentName"].ToString();  //将值写入到客户端硬盘Cookie
-                            Response.Cookies["eReimDepartment"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
-                        }
-                        else
-                        {
-                            HttpCookie cookie = new HttpCookie("eReimDepartment", dt1.Rows[0]["CRPDepartmentName"].ToString());
-                            cookie.Expires = DateTime.Now.AddHours(12);
-                            Response.Cookies.Add(cookie);
-                        }
-                        if (Request.Cookies["eReimCostCenter"] != null)
-                        {
-                            Response.Cookies["eReimCostCenter"].Value = dt1.Rows[0]["CostCenter"].ToString();  //将值写入到客户端硬盘Cookie
-                            Response.Cookies["eReimCostCenter"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
-                        }
-                        else
-                        {
-                            HttpCookie cookie = new HttpCookie("eReimCostCenter", dt1.Rows[0]["CostCenter"].ToString());
-                            cookie.Expires = DateTime.Now.AddHours(12);
-                            Response.Cookies.Add(cookie);
-                        }
-
-                        //DataTable dttemp = new DataTable();
-                        //string sqltemp = "select * from ESUSER where Userid='" + dtuser.Rows[0]["UserID"].ToString() + "'";
-                        //dttemp = dbc.GetData("eReimbursement", sqltemp);
-                        //if (dttemp.Rows.Count > 0)
-                        //{
-                        //    //Session["CostCenter"] = dttemp.Rows[0]["Station"].ToString();
-                        //    if (Request.Cookies["eReimCostCenter"] != null)
-                        //    {
-                        //        Response.Cookies["eReimCostCenter"].Value = dttemp.Rows[0][3].ToString();  //将值写入到客户端硬盘Cookie
-                        //        Response.Cookies["eReimCostCenter"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
-                        //    }
-                        //    else
-                        //    {
-                        //        HttpCookie cookie = new HttpCookie("eReimCostCenter", dttemp.Rows[0][3].ToString());
-                        //        cookie.Expires = DateTime.Now.AddHours(12);
-                        //        Response.Cookies.Add(cookie);
-                        //    }
-                        //}
-                        X.AddScript("window.location.reload();");
-                    }
-                    else
-                    {
-                        X.Msg.Alert("Message", "Data Error.").Show();
-                        return;
-                    }
+                    Response.Cookies["eReimUserID"].Value = dt1.Rows[0]["UserID"].ToString();  //将值写入到客户端硬盘Cookie
+                    Response.Cookies["eReimUserID"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
                 }
                 else
                 {
-                    X.Msg.Alert("Message", "Please confirm your UserID and Password.").Show();
-                    return;
+                    HttpCookie cookie = new HttpCookie("eReimUserID", dt1.Rows[0]["UserID"].ToString());
+                    cookie.Expires = DateTime.Now.AddHours(12);
+                    Response.Cookies.Add(cookie);
                 }
-                if (ds != null)
+                if (Request.Cookies["eReimUserName"] != null)
                 {
-                    ds.Dispose();
+                    Response.Cookies["eReimUserName"].Value = dt1.Rows[0]["fullName"].ToString();  //将值写入到客户端硬盘Cookie
+                    Response.Cookies["eReimUserName"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
                 }
+                else
+                {
+                    HttpCookie cookie = new HttpCookie("eReimUserName", dt1.Rows[0]["fullName"].ToString());
+                    cookie.Expires = DateTime.Now.AddHours(12);
+                    Response.Cookies.Add(cookie);
+                }
+                if (Request.Cookies["eReimStation"] != null)
+                {
+                    Response.Cookies["eReimStation"].Value = dt1.Rows[0]["stationCode"].ToString();  //将值写入到客户端硬盘Cookie
+                    Response.Cookies["eReimStation"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
+                }
+                else
+                {
+                    HttpCookie cookie = new HttpCookie("eReimStation", dt1.Rows[0]["stationCode"].ToString());
+                    cookie.Expires = DateTime.Now.AddHours(12);
+                    Response.Cookies.Add(cookie);
+                }
+                if (Request.Cookies["eReimDepartment"] != null)
+                {
+                    Response.Cookies["eReimDepartment"].Value = dt1.Rows[0]["CRPDepartmentName"].ToString();  //将值写入到客户端硬盘Cookie
+                    Response.Cookies["eReimDepartment"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
+                }
+                else
+                {
+                    HttpCookie cookie = new HttpCookie("eReimDepartment", dt1.Rows[0]["CRPDepartmentName"].ToString());
+                    cookie.Expires = DateTime.Now.AddHours(12);
+                    Response.Cookies.Add(cookie);
+                }
+                if (Request.Cookies["eReimCostCenter"] != null)
+                {
+                    Response.Cookies["eReimCostCenter"].Value = dt1.Rows[0]["CostCenter"].ToString();  //将值写入到客户端硬盘Cookie
+                    Response.Cookies["eReimCostCenter"].Expires = DateTime.Now.AddHours(12);//设置Cookie过期时间
+                }
+                else
+                {
+                    HttpCookie cookie = new HttpCookie("eReimCostCenter", dt1.Rows[0]["CostCenter"].ToString());
+                    cookie.Expires = DateTime.Now.AddHours(12);
+                    Response.Cookies.Add(cookie);
+                }
+                X.AddScript("window.location.reload();");
             }
-            
-            catch (Exception ex)
+            else
             {
-                DIMERCO.SDK.MailMsg mail = new DIMERCO.SDK.MailMsg();
-
-                mail.FromDispName = "eReimbursement";
-                mail.From = "DIC2@dimerco.com";
-                mail.To = "Andy_Kang@dimerco.com";
-                mail.Title = "eReimbursement Bug" + DateTime.Now.ToString("yyyy/MM/dd hh:mm:dd");
-                mail.Body = ex.Message+"<br/>"+ex.InnerException.ToString() + "</div>";
-                mail.Send();
+                X.Msg.Alert("Message", "Data Error.").Show();
+                return;
             }
+
         }
         [DirectMethod]
         public void Logout()

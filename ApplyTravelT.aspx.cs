@@ -531,13 +531,20 @@ namespace eReimbursement
                             DataTable dtflow = new DataTable();
                             dtflow = dbc.GetData("eReimbursement", sqlflow);
                             //160119 垫付,如果登录用户是被垫付人审批人之一,则显示预算,否则不显示
-                            if (dtflow != null && dtflow.Rows.Count > 0 && dtflow.Select("ApproverID='" + Request.Cookies.Get("eReimUserID").Value + "' and FPersonID=OnBehalfPersonID").Count() > 0)
+                            //if (dtflow != null && dtflow.Rows.Count > 0 && dtflow.Select("ApproverID='" + Request.Cookies.Get("eReimUserID").Value + "' and FPersonID=OnBehalfPersonID").Count() > 0)
+                            //{
+                            //    StoreBudget.DataSource = dtbudget;
+                            //    StoreBudget.DataBind();
+                            //}
+                            if (dtflow != null && dtflow.Rows.Count > 0)
                             {
-                                StoreBudget.DataSource = dtbudget;
-                                StoreBudget.DataBind();
+                                if (dtflow.Select("ApproverID='" + Request.Cookies.Get("eReimUserID").Value + "' and FPersonID=OnBehalfPersonID").Count() > 0 || dtflow.Select("ApproverID='" + Request.Cookies.Get("eReimUserID").Value + "' and OnBehalfPersonID is null").Count() > 0)
+                                {
+                                    StoreBudget.DataSource = dtbudget;
+                                    StoreBudget.DataBind();
+                                }
+
                             }
-                            StoreBudget.DataSource = dtbudget;
-                            StoreBudget.DataBind();
 
 
                             for (int i = 0; i < dtall.Rows.Count; i++)
@@ -1096,7 +1103,7 @@ namespace eReimbursement
                                     //预算
                                     //140226 显示预算
                                     DataTable dtbudget = new DataTable();
-                                    dtbudget.Columns.Add("RequestID", typeof(System.Int16));
+                                    dtbudget.Columns.Add("RequestID", typeof(System.Int32));
                                     dtbudget.Columns.Add("Status", typeof(System.Int16));
                                     dtbudget.Columns.Add("EName", typeof(System.String));
                                     dtbudget.Columns.Add("COACode", typeof(System.String));
@@ -1225,7 +1232,7 @@ namespace eReimbursement
                                         SqlCommand scdetail = sqlConn.CreateCommand();
                                         scdetail.CommandText = "Insert into Budget_Complete (FormType,RequestID,Status,COACode,EName,LocalCur,CenterCur,Rate,LocalAmount,PA,CA,PU,PB,PPercent,DU,DB,DPercent,SU,SB,SPercent) values (@FormType,@RequestID,@Status,@COACode,@EName,@LocalCur,@CenterCur,@Rate,@LocalAmount,@PA,@CA,@PU,@PB,@PPercent,@DU,@DB,@DPercent,@SU,@SB,@SPercent)";
                                         SqlParameter spdetail = new SqlParameter("@RequestID", SqlDbType.Int);
-                                        spdetail.Value = Convert.ToInt16(ID);
+                                        spdetail.Value = Convert.ToInt32(ID);
                                         scdetail.Parameters.Add(spdetail);
 
                                         spdetail = new SqlParameter("@FormType", SqlDbType.VarChar, 10);
@@ -1351,7 +1358,7 @@ namespace eReimbursement
                                         //预算
                                         //140226 显示预算
                                         DataTable dtbudget = new DataTable();
-                                        dtbudget.Columns.Add("RequestID", typeof(System.Int16));
+                                        dtbudget.Columns.Add("RequestID", typeof(System.Int32));
                                         dtbudget.Columns.Add("Status", typeof(System.Int16));
                                         dtbudget.Columns.Add("EName", typeof(System.String));
                                         dtbudget.Columns.Add("COACode", typeof(System.String));
@@ -1480,7 +1487,7 @@ namespace eReimbursement
                                             SqlCommand scdetail = sqlConn.CreateCommand();
                                             scdetail.CommandText = "Insert into Budget_Complete (FormType,RequestID,Status,COACode,EName,LocalCur,CenterCur,Rate,LocalAmount,PA,CA,PU,PB,PPercent,DU,DB,DPercent,SU,SB,SPercent) values (@FormType,@RequestID,@Status,@COACode,@EName,@LocalCur,@CenterCur,@Rate,@LocalAmount,@PA,@CA,@PU,@PB,@PPercent,@DU,@DB,@DPercent,@SU,@SB,@SPercent)";
                                             SqlParameter spdetail = new SqlParameter("@RequestID", SqlDbType.Int);
-                                            spdetail.Value = Convert.ToInt16(ID);
+                                            spdetail.Value = Convert.ToInt32(ID);
                                             scdetail.Parameters.Add(spdetail);
 
                                             spdetail = new SqlParameter("@FormType", SqlDbType.VarChar, 10);
@@ -1597,7 +1604,7 @@ namespace eReimbursement
                                     //预算
                                     //140226 显示预算
                                     DataTable dtbudget = new DataTable();
-                                    dtbudget.Columns.Add("RequestID", typeof(System.Int16));
+                                    dtbudget.Columns.Add("RequestID", typeof(System.Int32));
                                     dtbudget.Columns.Add("Status", typeof(System.Int16));
                                     dtbudget.Columns.Add("EName", typeof(System.String));
                                     dtbudget.Columns.Add("COACode", typeof(System.String));
@@ -1762,7 +1769,7 @@ namespace eReimbursement
                 //预算
                 //140226 显示预算
                 DataTable dtbudget = new DataTable();
-                dtbudget.Columns.Add("RequestID", typeof(System.Int16));
+                dtbudget.Columns.Add("RequestID", typeof(System.Int32));
                 dtbudget.Columns.Add("Status", typeof(System.Int16));
                 dtbudget.Columns.Add("EName", typeof(System.String));
                 dtbudget.Columns.Add("COACode", typeof(System.String));
@@ -2251,12 +2258,14 @@ namespace eReimbursement
                 {
                     mail.To = dsowner.Tables[0].Rows[0]["eMail"].ToString();
                 }
-                string testmailstr = "";
-                //testmailstr += "<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />";
-                //testmailstr += "<div>";
+                
 
-                mail.To = mailto;
-                mail.Cc = mailcc;
+                //mail.To = mailto;
+                //mail.Cc = mailcc;
+
+                string testmailstr = "";
+                testmailstr += "<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />";
+                testmailstr += "<div>";
 
 
                 if (type == "G")//通用费用

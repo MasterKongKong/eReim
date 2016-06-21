@@ -1076,7 +1076,8 @@ namespace eReimbursement
                 //取得本币与成本中心汇率转换
                 decimal rate = 1;
                 string CurLocal = dtall.Rows[0]["Cur"].ToString();
-                string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtall.Rows[0]["TSation"].ToString());
+                //160616 Andy Kang
+                string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dt.Rows[0]["CostCenter"].ToString());
                 
 
                 //合计数据
@@ -4311,8 +4312,8 @@ namespace eReimbursement
                 {
                     mail.To = dsowner.Tables[0].Rows[0]["eMail"].ToString();
                 }
-                mail.To = mailto;
-                mail.Cc = mailcc;
+                //mail.To = mailto;
+                //mail.Cc = mailcc;
 
 
 
@@ -4326,8 +4327,8 @@ namespace eReimbursement
 
 
                 //160127 Shanshan提出邮件测试
-                //sb.Append("<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />");
-                //sb.Append("<div>");
+                sb.Append("<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />");
+                sb.Append("<div>");
 
 
 

@@ -1088,8 +1088,8 @@ namespace eReimbursement
 
             //delete by Brian 16.04.20
             //labelOwner.Text = dt.Rows[0]["Person"].ToString();
-            //hdOwner.Value = dt.Rows[0]["Person"].ToString();
-            //hdOwnerID.Value = dt.Rows[0]["PersonID"].ToString();
+            hdOwner.Value = dt.Rows[0]["Person"].ToString();
+            hdOwnerID.Value = dt.Rows[0]["PersonID"].ToString();
 
             //add by brian 16.04.20,change to cbx from hidden input
             cbxPerson.SelectedItem.Value = dt.Rows[0]["PersonID"].ToString();
@@ -1324,7 +1324,8 @@ namespace eReimbursement
                 //取得本币与成本中心汇率转换
                 decimal rate = 1;
                 string CurLocal = dtall.Rows[0]["Cur"].ToString();
-                string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dtall.Rows[0]["TSation"].ToString());
+                //160616 Andy Kang
+                string CurBudget = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dt.Rows[0]["CostCenter"].ToString());
                 if (CurLocal != CurBudget)
                 {
                     rate = DIMERCO.SDK.Utilities.LSDK.GetBudgetConverRate(CurLocal, CurBudget, Convert.ToDateTime(dtA.Rows[0]["BudgetDate"].ToString()).Year);
@@ -2941,8 +2942,8 @@ namespace eReimbursement
                 {
                     mail.To = dsowner.Tables[0].Rows[0]["eMail"].ToString();
                 }
-                mail.To = mailto;
-                mail.Cc = mailcc;
+                //mail.To = mailto;
+                //mail.Cc = mailcc;
 
 
 
@@ -2954,8 +2955,8 @@ namespace eReimbursement
                 StringBuilder sb = new StringBuilder();
 
                 //160127 Shanshan提出邮件测试
-                //sb.Append("<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />");
-                //sb.Append("<div>");
+                sb.Append("<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />");
+                sb.Append("<div>");
 
 
 
@@ -3757,7 +3758,7 @@ namespace eReimbursement
             cs.DBCommand dbc = new cs.DBCommand();
             //检查是否选择了出差记录
             string sqlCheckFlow = "";
-            if (cbxPerson.Value == null || cbxPerson.Value.ToString() == "")
+            if (hdOwnerID.Value == null || hdOwnerID.Value.ToString() == "")
             {
                 if (Request.Cookies["lang"] != null && Request.Cookies["lang"].Value.ToLower() == "zh-cn")
                 {
@@ -3772,11 +3773,11 @@ namespace eReimbursement
             if (Radio1.Checked)
             //if (cbxBudget.Value.ToString() == "YES")//使用Budget审批流程
             {
-                sqlCheckFlow = "select * from GroupFlow where [Type]!=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "')";
+                sqlCheckFlow = "select * from GroupFlow where [Type]!=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "')";
             }
             else//使用unBudget审批流程
             {
-                sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "')";
+                sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "')";
             }
 
             //string sqlCheckFlow = "select * from GroupFlow where GID=(select GID from GroupUsers where UserID='" + cbxOwner.Text + "')";
@@ -3796,7 +3797,7 @@ namespace eReimbursement
         protected void ChangePerson(object sender, DirectEventArgs e)
         {
             cs.DBCommand dbc = new cs.DBCommand();
-            DataSet ds1 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(cbxPerson.Value.ToString());
+            DataSet ds1 = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(hdOwnerID.Value.ToString());
             if (ds1.Tables[0].Rows.Count == 1)
             {
                 DataTable dt1 = ds1.Tables[0];
@@ -3804,12 +3805,12 @@ namespace eReimbursement
                 labelDepartment.Text = dt1.Rows[0]["CRPDepartmentName"].ToString();
                 LabelCurrency.Text = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(dt1.Rows[0]["stationCode"].ToString());
 
-                //hdOwner.Text = dt1.Rows[0]["FullName"].ToString();
-                //hdOwnerID.Text = dt1.Rows[0]["UserID"].ToString();
+                hdOwner.Text = dt1.Rows[0]["FullName"].ToString();
+                hdOwnerID.Text = dt1.Rows[0]["UserID"].ToString();
 
                 //切换币种
                 DataTable dttemp = new DataTable();
-                string sqltemp = "select * from ESUSER where Userid='" + cbxPerson.Value.ToString() + "'";
+                string sqltemp = "select * from ESUSER where Userid='" + hdOwnerID.Value.ToString() + "'";
                 dttemp = dbc.GetData("eReimbursement", sqltemp);
                 if (dttemp.Rows.Count > 0)
                 {
@@ -3824,11 +3825,11 @@ namespace eReimbursement
             if (Radio1.Checked)
             //if (cbxBudget.Value.ToString() == "YES")//使用Budget审批流程
             {
-                sqlCheckFlow = "select * from GroupFlow where [Type]!=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "')";
+                sqlCheckFlow = "select * from GroupFlow where [Type]!=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "')";
             }
             else//使用unBudget审批流程
             {
-                sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "')";
+                sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "')";
             }
 
             //string sqlCheckFlow = "select * from GroupFlow where GID=(select GID from GroupUsers where UserID='" + cbxOwner.Text + "')";
@@ -4135,7 +4136,7 @@ namespace eReimbursement
             //160520 代垫费用不复制成本中心
             if (!CheckBoxOnBehalfItem.Checked)
             {
-                CostCenterNew.Text = GetUserInfo(cbxPerson.Value.ToString()).Rows[0]["CostCenter"].ToString();
+                CostCenterNew.Text = GetUserInfo(hdOwnerID.Value.ToString()).Rows[0]["CostCenter"].ToString();
             }
             CostCenterNew.EmptyText = "Station Code";
             HeaderColumn hcCostCenterNew = new HeaderColumn();
@@ -4238,16 +4239,16 @@ namespace eReimbursement
             }
             CCMailList = CCMailList.Length > 0 ? CCMailList.Substring(0, CCMailList.Length - 1) : "";
 
-            //string userid = cbxPerson.Value.ToString();
+            //string userid = hdOwnerID.Value.ToString();
             //string ostation = ""; string station = ""; string department = "";
 
             //160113 垫付人
-            string userid = (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "") ? cbxPerson.Value.ToString() : hdOnBehalf.Value.ToString();
+            string userid = (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "") ? hdOwnerID.Value.ToString() : hdOnBehalf.Value.ToString();
             string ostation = "";
             string station = ""; string department = "";
 
             string station_applyperson = ""; string costcenter_applyperson = ""; string dept_applyperson = "";
-            DataSet ds_apply = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(cbxPerson.Value.ToString());
+            DataSet ds_apply = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(hdOwnerID.Value.ToString());
             if (ds_apply.Tables[0].Rows.Count == 1)
             {
                 DataTable dt_apply = ds_apply.Tables[0];
@@ -4600,7 +4601,7 @@ namespace eReimbursement
             #endregion
             ////判断是否设置了审批流程
             //string sqlCheckFlow = "";
-            //sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "') order by FlowNo";
+            //sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "') order by FlowNo";
             //DataTable dtGroupFlowData = dbc.GetData("eReimbursement", sqlCheckFlow);
             //if (dtGroupFlowData.Rows.Count < 1)
             //{
@@ -4617,7 +4618,7 @@ namespace eReimbursement
             string sqlCheckFlow = ""; DataTable dtGroupFlowData = new DataTable();
             if (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "")
             {
-                sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "') order by FlowNo";
+                sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "') order by FlowNo";
                 dtGroupFlowData = dbc.GetData("eReimbursement", sqlCheckFlow);
                 if (dtGroupFlowData.Rows.Count < 1)
                 {
@@ -4634,8 +4635,8 @@ namespace eReimbursement
             }
             else//160113 垫付审批流程
             {
-                sqlCheckFlow = "select UserID,t1.* from (select * from GroupFlow where [Type]=2 and GID in (select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "')) t1 left join (select * from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "') t2 on t2.Gid=t1.Gid order by Gid,FlowNo";
-                //sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID in (select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "') order by Gid,FlowNo";
+                sqlCheckFlow = "select UserID,t1.* from (select * from GroupFlow where [Type]=2 and GID in (select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "')) t1 left join (select * from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "') t2 on t2.Gid=t1.Gid order by Gid,FlowNo";
+                //sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID in (select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "') order by Gid,FlowNo";
                 dtGroupFlowData = dbc.GetData("eReimbursement", sqlCheckFlow);
                 if (dtGroupFlowData.Rows.Count < 1)
                 {
@@ -4661,14 +4662,14 @@ namespace eReimbursement
                     { word += ",OnBehalfPersonID,OnBehalfPersonName,OnBehalfPersonUnit,OnBehalfPersonDept,OnBehalfPersonCostCenter"; }
                     string value = "";
                     value += "'" + station_applyperson + DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Month.ToString().PadLeft(2, '0') + "',";//edit
-                    value += "'" + X.GetValue("cbxPerson") + "',"; value += "'" + station_applyperson + "',"; value += "'" + dept_applyperson + "',";//edit
+                    value += "'" + hdOwner.Value.ToString() + "',"; value += "'" + station_applyperson + "',"; value += "'" + dept_applyperson + "',";//edit
                     value += "'" + hdReport.Value.ToString() + "',";
                     value += "'" + Request.Cookies.Get("eReimUserName").Value + "'";//edit
                     value += ",'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "',";
                     value += "'" + hdScanFile.Value.ToString() + "',";
                     value += "'" + txtRemark.Text.Replace("'", "''") + "',";
                     value += "null,null";
-                    value += ",'" + cbxPerson.Value.ToString() + "'";
+                    value += ",'" + hdOwnerID.Value.ToString() + "'";
                     value += ",'" + Request.Cookies.Get("eReimUserID").Value + "'";
                     value += ",'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "'";
                     value += ",'" + CCMailList + "'";
@@ -4699,7 +4700,7 @@ namespace eReimbursement
                     //160113 垫付
                     if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
                     {
-                        string personid = cbxPerson.Value.ToString();
+                        string personid = hdOwnerID.Value.ToString();
                         string onbehalfid = hdOnBehalf.Value.ToString();
                         DataTable dtOnbehalf = new DataTable();
                         dtOnbehalf.Columns.Add("FlowNo");
@@ -4850,7 +4851,7 @@ namespace eReimbursement
                     //    valueflow += "'T',";
                     //    valueflow += "'" + station + "',";//
                     //    valueflow += "'" + department + "',";
-                    //    valueflow += "'" + X.GetValue("cbxPerson") + "',";//申请人
+                    //    valueflow += "'" + hdOwner.Value.ToString() + "',";//申请人
                     //    valueflow += "'" + Request.Cookies.Get("eReimUserName").Value + "',";//填写人
                     //    valueflow += "'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "',";
                     //    valueflow += dtGroupFlowData.Rows[i]["FlowNo"].ToString() + ",";
@@ -4897,14 +4898,14 @@ namespace eReimbursement
                 }
                 else//由草稿升级为正式申请
                 {
-                    string updatesql = "update ETravel set [Person]='" + X.GetValue("cbxPerson");
+                    string updatesql = "update ETravel set [Person]='" + hdOwner.Value.ToString();
                     updatesql += "',[Station]='" + station_applyperson;
                     updatesql += "',[Department]='" + dept_applyperson;
                     updatesql += "',[ReportFile]='" + hdReport.Value.ToString();
                     updatesql += "',[Remark]='" + txtRemark.Text.Replace("'", "''") + "'";
                     updatesql += ",[Attach]='" + hdScanFile.Value.ToString() + "'";
                     updatesql += ",[Type]=0";
-                    updatesql += ",[PersonID]='" + cbxPerson.Value.ToString() + "'";
+                    updatesql += ",[PersonID]='" + hdOwnerID.Value.ToString() + "'";
                     string oldno = hdTravelRequestNo.Value.ToString();
                     string newno = hdTravelRequestNo.Value.ToString().Substring(0, hdTravelRequestNo.Value.ToString().Length - 1);
                     updatesql += ",[No]='" + newno + "',";
@@ -4950,7 +4951,7 @@ namespace eReimbursement
                     //    valueflow += "'T',";
                     //    valueflow += "'" + station + "',";
                     //    valueflow += "'" + department + "',";
-                    //    valueflow += "'" + X.GetValue("cbxPerson") + "',";
+                    //    valueflow += "'" + hdOwner.Value.ToString() + "',";
                     //    valueflow += "'" + Request.Cookies.Get("eReimUserName").Value + "',";
                     //    valueflow += "'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "',";
                     //    valueflow += dtGroupFlowData.Rows[i]["FlowNo"].ToString() + ",";
@@ -4969,7 +4970,7 @@ namespace eReimbursement
                     //160113 垫付
                     if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
                     {
-                        string personid = cbxPerson.Value.ToString();
+                        string personid = hdOwnerID.Value.ToString();
                         string onbehalfid = hdOnBehalf.Value.ToString();
                         DataTable dtOnbehalf = new DataTable();
                         dtOnbehalf.Columns.Add("FlowNo");
@@ -5156,13 +5157,13 @@ namespace eReimbursement
             {
                 if (hdTravelRequestID.Value.ToString() != "")//由链接进入的草稿更新
                 {
-                    string updatesql = "update ETravel set [Person]='" + X.GetValue("cbxPerson");
+                    string updatesql = "update ETravel set [Person]='" + hdOwner.Value.ToString();
                     updatesql += "',[Station]='" + station_applyperson;
                     updatesql += "',[Department]='" + dept_applyperson;
                     updatesql += "',[ReportFile]='" + hdReport.Value.ToString();
                     updatesql += "',[Remark]='" + txtRemark.Text.Replace("'", "''") + "'";
                     updatesql += ",[Attach]='" + hdScanFile.Value.ToString() + "'";
-                    updatesql += ",[PersonID]='" + cbxPerson.Value.ToString() + "'";
+                    updatesql += ",[PersonID]='" + hdOwnerID.Value.ToString() + "'";
                     updatesql += ",[CCMailList]='" + CCMailList + "'";
                     updatesql += ",[Budget]="+budget+"";
                     updatesql += ",[Station2]='" + ostation + "'";
@@ -5218,13 +5219,13 @@ namespace eReimbursement
                     { word += ",OnBehalfPersonID,OnBehalfPersonName,OnBehalfPersonUnit,OnBehalfPersonDept,OnBehalfPersonCostCenter"; }
                     string value = "";
                     value += "'" + station_applyperson + DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Month.ToString().PadLeft(2, '0') + "',";//edit
-                    value += "'" + X.GetValue("cbxPerson") + "',"; value += "'" + station_applyperson + "',"; value += "'" + dept_applyperson + "',";//edit
+                    value += "'" + hdOwner.Value.ToString() + "',"; value += "'" + station_applyperson + "',"; value += "'" + dept_applyperson + "',";//edit
                     value += "'" + hdReport.Value.ToString() + "',";
                     value += "'" + hdScanFile.Value.ToString() + "',";
                     value += "'" + txtRemark.Text.Replace("'", "''") + "',";
                     value += "null,null,";
                     value += "1";//标识为草稿
-                    value += ",'" + cbxPerson.Value.ToString() + "'";
+                    value += ",'" + hdOwnerID.Value.ToString() + "'";
                     value += ",'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "'";
                     value += ",'" + CCMailList + "'";
                     value += ",'" + ostation + "'";
@@ -5253,7 +5254,7 @@ namespace eReimbursement
                     valueflow += "'T',";
                     valueflow += "'" + station_applyperson + "',";
                     valueflow += "'" + dept_applyperson + "',";
-                    valueflow += "'" + X.GetValue("cbxPerson") + "',";
+                    valueflow += "'" + hdOwner.Value.ToString() + "',";
                     valueflow += "'" + Request.Cookies.Get("eReimUserName").Value + "',";
                     valueflow += "'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "',";
                     valueflow += "'" + newid.Split(',')[0] + "'";
@@ -5287,7 +5288,7 @@ namespace eReimbursement
                     }
                 }
             }
-            X.AddScript("btnGeteLeave.disable();cbxOnBehalfName.disable();");
+            X.AddScript("btnGeteLeave.disable();cbxOnBehalfName.disable();cbxPerson.disable();");
         }
         [DirectMethod]
         public void LoadBudget(string detail, string header1string, string header2string)
@@ -5609,12 +5610,12 @@ namespace eReimbursement
             //    dtB.Rows.Add(dr);
             //}
             //160113 垫付人
-            string userid1 = (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "") ? X.GetValue("cbxPerson") : hdOnBehalf.Value.ToString();
+            string userid1 = (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "") ? hdOwnerID.Value.ToString() : hdOnBehalf.Value.ToString();
             string ostation = "";
             string station = "";
 
             string station_applyperson = ""; string costcenter_applyperson = ""; string dept_applyperson = "";
-            DataSet ds_apply = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(X.GetValue("cbxPerson"));
+            DataSet ds_apply = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(hdOwnerID.Value.ToString());
             if (ds_apply.Tables[0].Rows.Count == 1)
             {
                 DataTable dt_apply = ds_apply.Tables[0];
@@ -5637,7 +5638,7 @@ namespace eReimbursement
             //检查是否本地维护过特殊币种
             cs.DBCommand dbc = new cs.DBCommand();
             DataTable dttemp = new DataTable();
-            string sqltemp = "select * from ESUSER where Userid='" + X.GetValue("cbxPerson") + "'";
+            string sqltemp = "select * from ESUSER where Userid='" + hdOwnerID.Value.ToString() + "'";
             dttemp = dbc.GetData("eReimbursement", sqltemp);
             if (dttemp.Rows.Count > 0)
             {
@@ -5656,8 +5657,8 @@ namespace eReimbursement
             //string dpt = dt.Rows[0]["Department"].ToString();
             //string ostation = dt.Rows[0]["CostCenter"].ToString();//预算站点,与基本信息中的CostCenter一致(Station2)
             //string CDate = dtA.Compute("Min(Date)", "").ToString();//记录预算日期
-            DataTable dtuser = GetUserInfo(cbxPerson.Value.ToString());
-            string userid = cbxPerson.Value.ToString();
+            DataTable dtuser = GetUserInfo(hdOwnerID.Value.ToString());
+            string userid = hdOwnerID.Value.ToString();
             string department = dtuser.Rows[0]["Department"].ToString();
             string tstation = dtuser.Rows[0]["CostCenter"].ToString();//Etravel表中的Station2,目前与预算站点一致,不允许更改
             string year = Convert.ToDateTime(dtA.Compute("Min(Date)", "").ToString()).Year.ToString();
@@ -5911,13 +5912,13 @@ namespace eReimbursement
             //string ostation = ""; string station = ""; string department = "";
 
             //160113 垫付人
-            string userid = (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "") ? cbxPerson.Value.ToString() : hdOnBehalf.Value.ToString();
+            string userid = (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "") ? hdOwnerID.Value.ToString() : hdOnBehalf.Value.ToString();
             string ostation = "";
             string station = ""; string department = "";
 
             //申请人 station、costcenter、dept
             string station_applyperson = ""; string costcenter_applyperson = ""; string dept_applyperson = "";
-            DataSet ds_apply = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(cbxPerson.Value.ToString());
+            DataSet ds_apply = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(hdOwnerID.Value.ToString());
             if (ds_apply.Tables[0].Rows.Count == 1)
             {
                 DataTable dt_apply = ds_apply.Tables[0];
@@ -5948,7 +5949,7 @@ namespace eReimbursement
             string CurLocal = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(costcenter_applyperson);
             //检查是否本地维护过特殊币种
             DataTable dttemp = new DataTable();
-            string sqltemp = "select * from ESUSER where Userid='" + cbxPerson.Value.ToString() + "'";
+            string sqltemp = "select * from ESUSER where Userid='" + hdOwnerID.Value.ToString() + "'";
             dttemp = dbc.GetData("eReimbursement", sqltemp);
             if (dttemp.Rows.Count > 0)
             {
@@ -6813,7 +6814,7 @@ namespace eReimbursement
 
                     if (hdOnBehalf.Value == null || hdOnBehalf.Value.ToString() == "")
                     {
-                        sqlCheckFlow = "select * from GroupFlow where [Type]!=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "') order by FlowNo";
+                        sqlCheckFlow = "select * from GroupFlow where [Type]!=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "') order by FlowNo";
                         dtGroupFlowData = dbc.GetData("eReimbursement", sqlCheckFlow);
                         if (dtGroupFlowData.Rows.Count < 1)
                         {
@@ -6830,7 +6831,7 @@ namespace eReimbursement
                     }
                     else//160113 垫付审批流程
                     {
-                        sqlCheckFlow = "select UserID,t1.* from (select * from GroupFlow where [Type]!=2 and GID in (select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "')) t1 left join (select * from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "') t2 on t2.Gid=t1.Gid order by Gid,FlowNo";
+                        sqlCheckFlow = "select UserID,t1.* from (select * from GroupFlow where [Type]!=2 and GID in (select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "')) t1 left join (select * from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "' or UserID='" + hdOnBehalf.Value.ToString() + "') t2 on t2.Gid=t1.Gid order by Gid,FlowNo";
                         dtGroupFlowData = dbc.GetData("eReimbursement", sqlCheckFlow);
                         if (dtGroupFlowData.Rows.Count < 1)
                         {
@@ -6858,14 +6859,14 @@ namespace eReimbursement
                             { word += ",OnBehalfPersonID,OnBehalfPersonName,OnBehalfPersonUnit,OnBehalfPersonDept,OnBehalfPersonCostCenter"; }
                             string value = "";
                             value += "'" + station_applyperson + DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Month.ToString().PadLeft(2, '0') + "',";//edit
-                            value += "'" + X.GetValue("cbxPerson") + "',"; value += "'" + station_applyperson + "',"; value += "'" + dept_applyperson + "',";//edit
+                            value += "'" + hdOwner.Value.ToString() + "',"; value += "'" + station_applyperson + "',"; value += "'" + dept_applyperson + "',";//edit
                             value += "'" + hdReport.Value.ToString() + "',";
                             value += "'" + Request.Cookies.Get("eReimUserName").Value + "'";//edit
                             value += ",'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "',";
                             value += "'" + hdScanFile.Value.ToString() + "',";
                             value += "'" + txtRemark.Text.Replace("'", "''") + "',";
                             value += "null,null";
-                            value += ",'" + cbxPerson.Value.ToString() + "'";
+                            value += ",'" + hdOwnerID.Value.ToString() + "'";
                             value += ",'" + Request.Cookies.Get("eReimUserID").Value + "'";
                             value += ",'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "'";
                             value += ",'" + CCMailList + "'";
@@ -6905,7 +6906,7 @@ namespace eReimbursement
                             //    valueflow += "'T',";
                             //    valueflow += "'" + station + "',";//
                             //    valueflow += "'" + department + "',";
-                            //    valueflow += "'" + X.GetValue("cbxPerson") + "',";//申请人
+                            //    valueflow += "'" + hdOwner.Value.ToString() + "',";//申请人
                             //    valueflow += "'" + Request.Cookies.Get("eReimUserName").Value + "',";//填写人
                             //    valueflow += "'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "',";
                             //    valueflow += dtGroupFlowData.Rows[i]["FlowNo"].ToString() + ",";
@@ -6924,7 +6925,7 @@ namespace eReimbursement
                             //160113 垫付
                             if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
                             {
-                                string personid = cbxPerson.Value.ToString();
+                                string personid = hdOwnerID.Value.ToString();
                                 string onbehalfid = hdOnBehalf.Value.ToString();
                                 DataTable dtOnbehalf = new DataTable();
                                 dtOnbehalf.Columns.Add("FlowNo");
@@ -7093,14 +7094,14 @@ namespace eReimbursement
                         }
                         else//由草稿升级为正式申请
                         {
-                            string updatesql = "update ETravel set [Person]='" + X.GetValue("cbxPerson");
+                            string updatesql = "update ETravel set [Person]='" + hdOwner.Value.ToString();
                             updatesql += "',[Station]='" + station_applyperson;
                             updatesql += "',[Department]='" + dept_applyperson;
                             updatesql += "',[ReportFile]='" + hdReport.Value.ToString();
                             updatesql += "',[Remark]='" + txtRemark.Text.Replace("'", "''") + "'";
                             updatesql += ",[Attach]='" + hdScanFile.Value.ToString() + "'";
                             updatesql += ",[Type]=0";
-                            updatesql += ",[PersonID]='" + cbxPerson.Value.ToString() + "'";
+                            updatesql += ",[PersonID]='" + hdOwnerID.Value.ToString() + "'";
                             string oldno = hdTravelRequestNo.Value.ToString();
                             string newno = hdTravelRequestNo.Value.ToString().Substring(0, hdTravelRequestNo.Value.ToString().Length - 1);
                             updatesql += ",[No]='" + newno + "',";
@@ -7137,7 +7138,7 @@ namespace eReimbursement
                             //160113 垫付
                             if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
                             {
-                                string personid = cbxPerson.Value.ToString();
+                                string personid = hdOwnerID.Value.ToString();
                                 string onbehalfid = hdOnBehalf.Value.ToString();
                                 DataTable dtOnbehalf = new DataTable();
                                 dtOnbehalf.Columns.Add("FlowNo");
@@ -7299,7 +7300,7 @@ namespace eReimbursement
                             //    valueflow += "'T',";
                             //    valueflow += "'" + station + "',";
                             //    valueflow += "'" + department + "',";
-                            //    valueflow += "'" + X.GetValue("cbxPerson") + "',";
+                            //    valueflow += "'" + hdOwner.Value.ToString() + "',";
                             //    valueflow += "'" + Request.Cookies.Get("eReimUserName").Value + "',";
                             //    valueflow += "'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "',";
                             //    valueflow += dtGroupFlowData.Rows[i]["FlowNo"].ToString() + ",";
@@ -7351,13 +7352,13 @@ namespace eReimbursement
                     {
                         if (hdTravelRequestID.Value.ToString() != "")//由链接进入的草稿更新
                         {
-                            string updatesql = "update ETravel set [Person]='" + X.GetValue("cbxPerson");
+                            string updatesql = "update ETravel set [Person]='" + hdOwner.Value.ToString();
                             updatesql += "',[Station]='" + station_applyperson;
                             updatesql += "',[Department]='" + dept_applyperson;
                             updatesql += "',[ReportFile]='" + hdReport.Value.ToString();
                             updatesql += "',[Remark]='" + txtRemark.Text.Replace("'", "''") + "'";
                             updatesql += ",[Attach]='" + hdScanFile.Value.ToString() + "'";
-                            updatesql += ",[PersonID]='" + cbxPerson.Value.ToString() + "'";
+                            updatesql += ",[PersonID]='" + hdOwnerID.Value.ToString() + "'";
                             updatesql += ",[CCMailList]='" + CCMailList + "'";
                             updatesql += ",[Budget]=1";
                             updatesql += ",[Station2]='" + ostation + "'";
@@ -7417,13 +7418,13 @@ namespace eReimbursement
 					
                             string value = "";
                             value += "'" + station_applyperson + DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Month.ToString().PadLeft(2, '0') + "',";//edit
-                            value += "'" + X.GetValue("cbxPerson") + "',"; value += "'" + station_applyperson + "',"; value += "'" + dept_applyperson + "',";//edit
+                            value += "'" + hdOwner.Value.ToString() + "',"; value += "'" + station_applyperson + "',"; value += "'" + dept_applyperson + "',";//edit
                             value += "'" + hdReport.Value.ToString() + "',";
                             value += "'" + hdScanFile.Value.ToString() + "',";
                             value += "'" + txtRemark.Text.Replace("'", "''") + "',";
                             value += "null,null,";
                             value += "1";//标识为草稿
-                            value += ",'" + cbxPerson.Value.ToString() + "'";
+                            value += ",'" + hdOwnerID.Value.ToString() + "'";
                             value += ",'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "'";
                             value += ",'" + CCMailList + "'";
                             value += ",'" + ostation + "'";
@@ -7453,7 +7454,7 @@ namespace eReimbursement
                             valueflow += "'T',";
                             valueflow += "'" + station_applyperson + "',";
                             valueflow += "'" + dept_applyperson + "',";
-                            valueflow += "'" + X.GetValue("cbxPerson") + "',";
+                            valueflow += "'" + hdOwner.Value.ToString() + "',";
                             valueflow += "'" + Request.Cookies.Get("eReimUserName").Value + "',";
                             valueflow += "'" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "',";
                             valueflow += "'" + newid.Split(',')[0] + "'";
@@ -7491,7 +7492,7 @@ namespace eReimbursement
                 //UpdateMSG("Un-Budget:" + UnBudget.ToString());
             }
 
-            X.AddScript("btnGeteLeave.disable();cbxOnBehalfName.disable();");
+            X.AddScript("btnGeteLeave.disable();cbxOnBehalfName.disable();cbxPerson.disable();");
             
             
         }
@@ -7695,7 +7696,7 @@ namespace eReimbursement
                             scdetail.Parameters.Add(spdetail);
 
                             spdetail = new SqlParameter("@Createdby", SqlDbType.VarChar, 50);
-                            spdetail.Value = cbxPerson.Value.ToString();
+                            spdetail.Value = hdOwnerID.Value.ToString();
                             scdetail.Parameters.Add(spdetail);
 
                             spdetail = new SqlParameter("@CreadedDate", SqlDbType.DateTime);
@@ -7937,7 +7938,7 @@ namespace eReimbursement
             //        if (dtbudget.Rows[j]["Type"].ToString() == "全年个人")
             //        {
             //            personbudget = budget;
-            //            string stationbg = X.GetValue("cbxPerson") + "(YTD): " + used.ToString("#,##0.00") + "/" + budget.ToString("#,##0.00");
+            //            string stationbg = hdOwner.Value.ToString() + "(YTD): " + used.ToString("#,##0.00") + "/" + budget.ToString("#,##0.00");
             //            lbStaffBG.Text = stationbg;
             //        }
             //        else if (dtbudget.Rows[j]["Type"].ToString() == "全年部门")
@@ -8011,11 +8012,11 @@ namespace eReimbursement
             string sqlCheckFlow = "";
             if (Radio1.Checked)//使用Budget审批流程
             {
-                sqlCheckFlow = "select * from GroupFlow where [Type]!=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "')";
+                sqlCheckFlow = "select * from GroupFlow where [Type]!=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "')";
             }
             else//使用unBudget审批流程
             {
-                sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + cbxPerson.Value.ToString() + "')";
+                sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + hdOwnerID.Value.ToString() + "')";
             }
             DataTable dtGroupFlowData = dbc.GetData("eReimbursement", sqlCheckFlow);
             if (dtGroupFlowData.Rows.Count < 1)
