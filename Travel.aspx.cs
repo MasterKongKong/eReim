@@ -501,39 +501,81 @@ namespace eReimbursement
                 {
 
                     //Edit By Brian 16.04.20
+                    ////准备下拉菜单内容
+                    //Ext.Net.ListItem li = new Ext.Net.ListItem(Request.Cookies.Get("eReimUserName").Value, Request.Cookies.Get("eReimUserID").Value);
+                    //cbxPerson.Items.Add(li);
+                    //string sqlitem = "select * from Eagent where [St]=1 and [PAgentID]='" + Request.Cookies.Get("eReimUserID").Value + "'";
+                    //DataTable dtitem = dbc.GetData("eReimbursement", sqlitem);
+                    //int itemcount = 0;
+                    //for (int j = 0; j < dtitem.Rows.Count; j++)
+                    //{
+                    //    string sqlpara = sqlitem;
+                    //    if (dtitem.Rows[j][5].ToString() != "")
+                    //    {
+                    //        sqlpara += " and getdate()>='" + dtitem.Rows[j][5].ToString() + "' ";
+                    //    }
+                    //    if (dtitem.Rows[j][6].ToString() != "")
+                    //    {
+                    //        sqlpara += " and getdate()<='" + dtitem.Rows[j][6].ToString() + "' ";
+                    //    }
+                    //    DataTable dtitem1 = dbc.GetData("eReimbursement", sqlpara);
+                    //    for (int m = 0; m < dtitem1.Rows.Count; m++)
+                    //    {
+                    //        li = new Ext.Net.ListItem(dtitem.Rows[m][1].ToString(), dtitem.Rows[m][2].ToString());
+                    //        cbxPerson.Items.Add(li);
+                    //        itemcount++;
+                    //    }
+                    //}
+                    // Edit End
+                    //160622 Andy Kang
                     //准备下拉菜单内容
                     Ext.Net.ListItem li = new Ext.Net.ListItem(Request.Cookies.Get("eReimUserName").Value, Request.Cookies.Get("eReimUserID").Value);
                     cbxPerson.Items.Add(li);
                     string sqlitem = "select * from Eagent where [St]=1 and [PAgentID]='" + Request.Cookies.Get("eReimUserID").Value + "'";
                     DataTable dtitem = dbc.GetData("eReimbursement", sqlitem);
-                    int itemcount = 0;
                     for (int j = 0; j < dtitem.Rows.Count; j++)
                     {
                         string sqlpara = sqlitem;
+                        bool d1 = true;
+                        bool d2 = false;
                         if (dtitem.Rows[j][5].ToString() != "")
                         {
-                            sqlpara += " and getdate()>='" + dtitem.Rows[j][5].ToString() + "' ";
+                            //sqlpara += " and getdate()>='" + dtitem.Rows[j]["Bdate"].ToString() + "' ";
+                            if (DateTime.Now >= Convert.ToDateTime(dtitem.Rows[j][5].ToString()))
+                            {
+                                d1 = true;
+                            }
+                            else
+                            {
+                                d1 = false;
+                            }
                         }
                         if (dtitem.Rows[j][6].ToString() != "")
                         {
-                            sqlpara += " and getdate()<='" + dtitem.Rows[j][6].ToString() + "' ";
+                            //sqlpara += " and getdate()<='" + dtitem.Rows[j]["Edate"].ToString() + "' ";
+                            if (DateTime.Now <= Convert.ToDateTime(dtitem.Rows[j][6].ToString()))
+                            {
+                                d2 = true;
+                            }
+                            else
+                            {
+                                d2 = false;
+                            }
                         }
-                        DataTable dtitem1 = dbc.GetData("eReimbursement", sqlpara);
-                        for (int m = 0; m < dtitem1.Rows.Count; m++)
+                        if (d1 && d2)
                         {
-                            li = new Ext.Net.ListItem(dtitem.Rows[m][1].ToString(), dtitem.Rows[m][2].ToString());
+                            li = new Ext.Net.ListItem(dtitem.Rows[j][1].ToString(), dtitem.Rows[j][2].ToString());
                             cbxPerson.Items.Add(li);
-                            itemcount++;
                         }
                     }
-                    // Edit End
 
 
                     ////新增记录时,默认为登录用户
                     //cbxOwner.SelectedItem.Value = Request.Cookies.Get("eReimUserID").Value;
                     //cbxOwner.SelectedItem.Text = Request.Cookies.Get("eReimUserName").Value;
-                    //hdOwner.Value = Request.Cookies.Get("eReimUserName").Value;
-                    //hdOwnerID.Value = Request.Cookies.Get("eReimUserID").Value;
+                    //160622 Andy Kang
+                    hdOwner.Value = Request.Cookies.Get("eReimUserName").Value;
+                    hdOwnerID.Value = Request.Cookies.Get("eReimUserID").Value;
                     //labelOwner.Text = Request.Cookies.Get("eReimUserName").Value;
 
                     //新增记录时,默认为登录用户 add by Brian 16.05.20
