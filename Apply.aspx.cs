@@ -2010,7 +2010,7 @@ namespace eReimbursement
             }
 
             decimal rate = 1;//记录用户币种与预算站点币种汇率
-            string CurLocal = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(costcenter_applyperson);
+            string CurLocal = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(station_applyperson);
             //检查是否本地维护过特殊币种
             DataTable dttemp = new DataTable();
             string sqltemp = "select * from ESUSER where Userid='" + cbxPerson.Value.ToString() + "'";
@@ -2958,7 +2958,7 @@ namespace eReimbursement
             }
 
             decimal rate = 1;//记录用户币种与预算站点币种汇率
-            string CurLocal = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(costcenter_applyperson);
+            string CurLocal = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(station_applyperson);
             //检查是否本地维护过特殊币种
             DataTable dttemp = new DataTable();
             string sqltemp = "select * from ESUSER where Userid='" + cbxPerson.Value.ToString() + "'";
