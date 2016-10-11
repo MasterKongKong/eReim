@@ -32,7 +32,7 @@ namespace eReimbursement
                     DataTable dt1 = ds2.Tables[0];
                     station = dt1.Rows[0]["stationCode"].ToString();
                     hdStation.Value = dt1.Rows[0]["stationCode"].ToString();
-                    cbxTStation.Text = dt1.Rows[0]["CostCenter"].ToString();
+                    //cbxTStation.Text = dt1.Rows[0]["CostCenter"].ToString();
                     LabelCurrency.Text = DIMERCO.SDK.Utilities.LSDK.GetStationCurrencyByCode(station);
                     DataTable dttemp = new DataTable();
                     string sqltemp = "select * from ESUSER where Userid='" + Request.QueryString["apply_userid"].ToString() + "'";
@@ -42,7 +42,14 @@ namespace eReimbursement
                         LabelCurrency.Text = dttemp.Rows[0]["Currency"].ToString();
                     }
                 }
-
+                //160922 Andy Kang,垫付费用时,成本中心显示为被垫付人所属成本中心
+                DataSet dsOnbehalf = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(Request.QueryString["UserID"].ToString());
+                if (dsOnbehalf.Tables[0].Rows.Count == 1)
+                {
+                    DataTable dt1 = dsOnbehalf.Tables[0];
+                    station = dt1.Rows[0]["stationCode"].ToString();
+                    cbxTStation.Text = dt1.Rows[0]["CostCenter"].ToString();
+                }
                 string sql = "select";
                 string sqlEType = "select ";
                 if (Request.Cookies["lang"] != null && Request.Cookies["lang"].Value.ToLower() == "zh-cn")
@@ -459,13 +466,13 @@ namespace eReimbursement
         [DirectMethod]
         public void GetBudget(string detailjson)
         {
-            //160115
+            //160922 Andy Kang,如果登陆人与被垫付人不同,则不显示预算
             string useridonbehalf = Request.QueryString["UserID"].ToString();
             string loginuserid = Request.Cookies.Get("eReimUserID").Value.ToString();
-            //if (useridonbehalf != loginuserid)
-            //{
-            //    return;
-            //}
+            if (useridonbehalf != loginuserid)
+            {
+                return;
+            }
             cs.DBCommand dbc = new cs.DBCommand();
             DataTable dtbudget = new DataTable();
             //StoreBudget添加Field

@@ -162,6 +162,7 @@
     <Content Include="Scripts\pagesetting.js" />
     <None Include="Service References\ServiceReference1\BudgetApplication1.disco" />
     <Content Include="Test.aspx" />
+    <Content Include="Transfer.aspx" />
     <Content Include="Welcome.aspx" />
     <None Include="App_Code\DataSet1.xsc">
       <DependentUpon>DataSet1.xsd</DependentUpon>
@@ -351,6 +352,13 @@
     </Compile>
     <Compile Include="Test.aspx.designer.cs">
       <DependentUpon>Test.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Transfer.aspx.cs">
+      <DependentUpon>Transfer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Transfer.aspx.designer.cs">
+      <DependentUpon>Transfer.aspx</DependentUpon>
     </Compile>
     <Compile Include="Welcome.aspx.cs">
       <DependentUpon>Welcome.aspx</DependentUpon>
@@ -694,7 +702,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>32989</DevelopmentServerPort>
+          <DevelopmentServerPort>45540</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

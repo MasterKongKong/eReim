@@ -1467,7 +1467,17 @@ namespace eReimbursement
                 {
                     if (dtbase.Rows[0]["Status"].ToString()=="3")//完成:拒绝
                     {
-                        mail.Title = "Dimerco eReimbursement "+budget+" " + dtMail.Rows[0]["Person"].ToString() + " - Application Rejected.";
+                        //mail.Title = "Dimerco eReimbursement "+budget+" " + dtMail.Rows[0]["Person"].ToString() + " - Application Rejected.";
+                        //16090007E 
+                        if (dtMail.Rows[0]["OnBehalfPersonID"].ToString() != "")
+                        {
+                            mail.Title = "Dimerco eReimbursement on behalf of " + dtMail.Rows[0]["OnBehalfPersonName"].ToString() + " " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - Application Rejected.";
+                        }
+                        else
+                        {
+                            mail.Title = "Dimerco eReimbursement " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - Application Rejected.";
+                        }
+
                         sb.Append("<div " + divstyle + ">Dear " + dtbase.Rows[0]["Person"].ToString() + ",</div><br />");
                         //sb.Append("<div " + divstyleReject + ">The following eReimbursement application has been rejected.</div><br /><br />");
                         //160115 垫付
@@ -1520,7 +1530,16 @@ namespace eReimbursement
                     }
                     else//完成:通过
                     {
-                        mail.Title = "Dimerco eReimbursement "+budget+" " + dtMail.Rows[0]["Person"].ToString() + " - Application Approved.";
+                        //mail.Title = "Dimerco eReimbursement "+budget+" " + dtMail.Rows[0]["Person"].ToString() + " - Application Approved.";
+                        //16090007E 
+                        if (dtMail.Rows[0]["OnBehalfPersonID"].ToString() != "")
+                        {
+                            mail.Title = "Dimerco eReimbursement on behalf of " + dtMail.Rows[0]["OnBehalfPersonName"].ToString() + " " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - Application Approved.";
+                        }
+                        else
+                        {
+                            mail.Title = "Dimerco eReimbursement " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - Application Approved.";
+                        }
                         sb.Append("<div " + divstyle + ">Dear " + dtbase.Rows[0]["Person"].ToString() + ",</div><br />");
                         //sb.Append("<div " + divstyle + ">The following eReimbursement application has been approved(Complete).</div><br /><br />");
                         //160115 垫付
@@ -1655,6 +1674,10 @@ namespace eReimbursement
                             {
                                 msg = "Process Paying.";
                             }
+                            else if (dtMail.Rows[i]["FlowFn"].ToString().ToLower() == "confirm")
+                            {
+                                msg = "Seek For Your Confirmation.";
+                            }
                             else
                             {
                                 msg = "Seek For Your Approval.";
@@ -1734,7 +1757,16 @@ namespace eReimbursement
                             }
                         }
                     }
-                    mail.Title = "Dimerco eReimbursement " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - " + msg;
+                    //mail.Title = "Dimerco eReimbursement " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - " + msg;
+                    //16090007E 
+                    if (dtMail.Rows[0]["OnBehalfPersonID"].ToString() != "")
+                    {
+                        mail.Title = "Dimerco eReimbursement on behalf of " + dtMail.Rows[0]["OnBehalfPersonName"].ToString() + " " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - " + msg;
+                    }
+                    else
+                    {
+                        mail.Title = "Dimerco eReimbursement " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - " + msg;
+                    }
                 }
 
 
@@ -1747,12 +1779,12 @@ namespace eReimbursement
                 {
                     mail.To = dsowner.Tables[0].Rows[0]["eMail"].ToString();
                 }
-                //mail.To = mailto;
-                //mail.Cc = mailcc;
-
                 string testmailstr = "";
                 testmailstr += "<div " + divstyleReject + ">THIS IS A TEST MAIL." + mailtestword + "</div><br />";
                 testmailstr += "<div>";
+
+                //mail.To = mailto;
+                //mail.Cc = mailcc;
 
 
 
@@ -2805,6 +2837,10 @@ namespace eReimbursement
                         {
                             msg1 = ". To Be Issued: ";
                         }
+                        else if (dtMail.Rows[i]["FlowFn"].ToString().ToLower() == "confirm")
+                        {
+                            msg1 = ". Waiting For Confirmation.";
+                        }
                         else
                         {
                             msg1 = ". Waiting for Approval: ";
@@ -2829,6 +2865,10 @@ namespace eReimbursement
                         else if (dtMail.Rows[i]["FlowFn"].ToString().ToLower() == "issuer")
                         {
                             msg1 = " Issued by: ";
+                        }
+                        else if (dtMail.Rows[i]["FlowFn"].ToString().ToLower() == "confirm")
+                        {
+                            msg1 = " Confirmed by: ";
                         }
                         else
                         {

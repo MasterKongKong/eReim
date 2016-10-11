@@ -2252,11 +2252,6 @@ namespace eReimbursement
                     return;
                 }
             }
-
-
-
-
-
             //string sqlCheckFlow = "";
             //sqlCheckFlow = "select * from GroupFlow where [Type]=2 and GID=(select GID from GroupUsers where UserID='" + userid + "') order by FlowNo";
             //DataTable dtGroupFlowData = dbc.GetData("eReimbursement", sqlCheckFlow);
@@ -2274,6 +2269,14 @@ namespace eReimbursement
             //}
             if (type == "ND")//保存并申请
             {
+                string onbehalfname = "";
+                if (hdOnBehalf.Value!=null&& hdOnBehalf.Value.ToString()!="")
+                {
+                    DataSet dsCon = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(hdOnBehalf.Value.ToString());
+                    onbehalfname = dsCon.Tables[0].Rows[0]["fullName"].ToString();
+                }
+                
+
                 if (hdTravelRequestID.Value.ToString() != "")//草稿升级为正式申请
                 {
                     if (LabelMonth.Text != DateTime.Now.Month.ToString() && DateTime.Now.Day > 5)
@@ -2327,9 +2330,11 @@ namespace eReimbursement
                     string deleterows = dbc.UpdateData("eReimbursement", sqlDeleteEflow, "Update");
                     string rows = "";
 
+                    
                     //160113 垫付
                     if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
                     {
+                        
                         string personid = cbxPerson.Value.ToString();
                         string onbehalfid = hdOnBehalf.Value.ToString();
                         DataTable dtOnbehalf = new DataTable();
@@ -2338,17 +2343,31 @@ namespace eReimbursement
                         dtOnbehalf.Columns.Add("FlowUserid");
                         dtOnbehalf.Columns.Add("Fn");
                         dtOnbehalf.Columns.Add("PersonID");
+                        //160905垫付流程变更 2016090007E
+                        DataRow drConfirm = dtOnbehalf.NewRow();
+                        drConfirm["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        drConfirm["FlowUser"] = onbehalfname;
+                        drConfirm["FlowUserid"] = hdOnBehalf.Value.ToString();
+                        drConfirm["Fn"] = "Confirm";
+                        drConfirm["PersonID"] = hdOnBehalf.Value.ToString();
+                        dtOnbehalf.Rows.Add(drConfirm);
+
                         //被垫付人的Verifier
                         if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count() >= 1)
                         {
-                            DataRow dr = dtOnbehalf.NewRow();
+
                             DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count()) - 1];
-                            dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                            dr["FlowUser"] = drold["FlowUser"].ToString();
-                            dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                            dr["Fn"] = "Verifier";
-                            dr["PersonID"] = drold["UserID"].ToString();
-                            dtOnbehalf.Rows.Add(dr);
+
+                            if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                            {
+                                DataRow dr = dtOnbehalf.NewRow();
+                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                dr["FlowUser"] = drold["FlowUser"].ToString();
+                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                dr["Fn"] = "Verifier";
+                                dr["PersonID"] = drold["UserID"].ToString();
+                                dtOnbehalf.Rows.Add(dr);
+                            }
                         }
                         //被垫付人的Apporver
                         if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
@@ -2356,61 +2375,148 @@ namespace eReimbursement
                             int flowcount = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count();
                             if (flowcount >= 2)
                             {
-                                DataRow dr = dtOnbehalf.NewRow();
                                 DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 2];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                dr["Fn"] = "Apporver";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
-
-                                dr = dtOnbehalf.NewRow();
-                                drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                dr["Fn"] = "Apporver";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
+                                if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                    dr["Fn"] = "Apporver";
+                                    dr["PersonID"] = drold["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
+                                DataRow drold1 = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                                if (dtOnbehalf.Select("FlowUserid='" + drold1["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold1["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold1["FlowUserID"].ToString();
+                                    dr["Fn"] = "Apporver";
+                                    dr["PersonID"] = drold1["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
                             }
                             else
                             {
-                                DataRow dr = dtOnbehalf.NewRow();
                                 DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                dr["Fn"] = "Apporver";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
+                                if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                    dr["Fn"] = "Apporver";
+                                    dr["PersonID"] = drold["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
                             }
-                            
                         }
-                        //垫付人的Apporver
-                        if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
-                        {
-                            DataRow dr = dtOnbehalf.NewRow();
-                            DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                            dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                            dr["FlowUser"] = drold["FlowUser"].ToString();
-                            dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                            dr["Fn"] = "Apporver";
-                            dr["PersonID"] = drold["UserID"].ToString();
-                            dtOnbehalf.Rows.Add(dr);
-                        }
+                        //160905垫付流程变更 2016090007E
+                        ////垫付人的Apporver
+                        //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                        //{
+                        //    DataRow dr = dtOnbehalf.NewRow();
+                        //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                        //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                        //    dr["Fn"] = "Apporver";
+                        //    dr["PersonID"] = drold["UserID"].ToString();
+                        //    dtOnbehalf.Rows.Add(dr);
+                        //}
                         //垫付人的Issuer
                         if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
                         {
-                            DataRow dr = dtOnbehalf.NewRow();
                             DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
-                            dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                            dr["FlowUser"] = drold["FlowUser"].ToString();
-                            dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                            dr["Fn"] = "Issuer";
-                            dr["PersonID"] = drold["UserID"].ToString();
-                            dtOnbehalf.Rows.Add(dr);
+                            if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                            {
+                                DataRow dr = dtOnbehalf.NewRow();
+
+                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                dr["FlowUser"] = drold["FlowUser"].ToString();
+                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                dr["Fn"] = "Issuer";
+                                dr["PersonID"] = drold["UserID"].ToString();
+                                dtOnbehalf.Rows.Add(dr);
+                            }
+
                         }
+
+                        ////被垫付人的Verifier
+                        //if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count() >= 1)
+                        //{
+                        //    DataRow dr = dtOnbehalf.NewRow();
+                        //    DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count()) - 1];
+                        //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                        //    dr["Fn"] = "Verifier";
+                        //    dr["PersonID"] = drold["UserID"].ToString();
+                        //    dtOnbehalf.Rows.Add(dr);
+                        //}
+                        ////被垫付人的Apporver
+                        //if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                        //{
+                        //    int flowcount = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count();
+                        //    if (flowcount >= 2)
+                        //    {
+                        //        DataRow dr = dtOnbehalf.NewRow();
+                        //        DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 2];
+                        //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //        dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                        //        dr["Fn"] = "Apporver";
+                        //        dr["PersonID"] = drold["UserID"].ToString();
+                        //        dtOnbehalf.Rows.Add(dr);
+
+                        //        dr = dtOnbehalf.NewRow();
+                        //        drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                        //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //        dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                        //        dr["Fn"] = "Apporver";
+                        //        dr["PersonID"] = drold["UserID"].ToString();
+                        //        dtOnbehalf.Rows.Add(dr);
+                        //    }
+                        //    else
+                        //    {
+                        //        DataRow dr = dtOnbehalf.NewRow();
+                        //        DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                        //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //        dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                        //        dr["Fn"] = "Apporver";
+                        //        dr["PersonID"] = drold["UserID"].ToString();
+                        //        dtOnbehalf.Rows.Add(dr);
+                        //    }
+                            
+                        //}
+                        ////垫付人的Apporver
+                        //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                        //{
+                        //    DataRow dr = dtOnbehalf.NewRow();
+                        //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                        //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                        //    dr["Fn"] = "Apporver";
+                        //    dr["PersonID"] = drold["UserID"].ToString();
+                        //    dtOnbehalf.Rows.Add(dr);
+                        //}
+                        ////垫付人的Issuer
+                        //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
+                        //{
+                        //    DataRow dr = dtOnbehalf.NewRow();
+                        //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
+                        //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                        //    dr["Fn"] = "Issuer";
+                        //    dr["PersonID"] = drold["UserID"].ToString();
+                        //    dtOnbehalf.Rows.Add(dr);
+                        //}
                         for (int j = 0; j < dtOnbehalf.Rows.Count; j++)
                         {
                             string wordflow = "[RequestID],[Type],[Step],[Status],[Approver],[ApproverID],[FlowFn],PersonID";
@@ -2590,17 +2696,31 @@ namespace eReimbursement
                         dtOnbehalf.Columns.Add("FlowUserid");
                         dtOnbehalf.Columns.Add("Fn");
                         dtOnbehalf.Columns.Add("PersonID");
+                        //160905垫付流程变更 2016090007E
+                        DataRow drConfirm = dtOnbehalf.NewRow();
+                        drConfirm["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        drConfirm["FlowUser"] = onbehalfname;
+                        drConfirm["FlowUserid"] = hdOnBehalf.Value.ToString();
+                        drConfirm["Fn"] = "Confirm";
+                        drConfirm["PersonID"] = hdOnBehalf.Value.ToString();
+                        dtOnbehalf.Rows.Add(drConfirm);
+
                         //被垫付人的Verifier
                         if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count() >= 1)
                         {
-                            DataRow dr = dtOnbehalf.NewRow();
+
                             DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count()) - 1];
-                            dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                            dr["FlowUser"] = drold["FlowUser"].ToString();
-                            dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                            dr["Fn"] = "Verifier";
-                            dr["PersonID"] = drold["UserID"].ToString();
-                            dtOnbehalf.Rows.Add(dr);
+
+                            if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                            {
+                                DataRow dr = dtOnbehalf.NewRow();
+                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                dr["FlowUser"] = drold["FlowUser"].ToString();
+                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                dr["Fn"] = "Verifier";
+                                dr["PersonID"] = drold["UserID"].ToString();
+                                dtOnbehalf.Rows.Add(dr);
+                            }
                         }
                         //被垫付人的Apporver
                         if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
@@ -2608,61 +2728,147 @@ namespace eReimbursement
                             int flowcount = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count();
                             if (flowcount >= 2)
                             {
-                                DataRow dr = dtOnbehalf.NewRow();
                                 DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 2];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                dr["Fn"] = "Apporver";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
-
-                                dr = dtOnbehalf.NewRow();
-                                drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                dr["Fn"] = "Apporver";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
+                                if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                    dr["Fn"] = "Apporver";
+                                    dr["PersonID"] = drold["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
+                                DataRow drold1 = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                                if (dtOnbehalf.Select("FlowUserid='" + drold1["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold1["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold1["FlowUserID"].ToString();
+                                    dr["Fn"] = "Apporver";
+                                    dr["PersonID"] = drold1["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
                             }
                             else
                             {
-                                DataRow dr = dtOnbehalf.NewRow();
                                 DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                                if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                    dr["Fn"] = "Apporver";
+                                    dr["PersonID"] = drold["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
+                            }
+                        }
+                        //160905垫付流程变更 2016090007E
+                        ////垫付人的Apporver
+                        //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                        //{
+                        //    DataRow dr = dtOnbehalf.NewRow();
+                        //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                        //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                        //    dr["Fn"] = "Apporver";
+                        //    dr["PersonID"] = drold["UserID"].ToString();
+                        //    dtOnbehalf.Rows.Add(dr);
+                        //}
+                        //垫付人的Issuer
+                        if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
+                        {
+                            DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
+                            if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                            {
+                                DataRow dr = dtOnbehalf.NewRow();
+
                                 dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
                                 dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                dr["Fn"] = "Apporver";
+                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                dr["Fn"] = "Issuer";
                                 dr["PersonID"] = drold["UserID"].ToString();
                                 dtOnbehalf.Rows.Add(dr);
                             }
 
                         }
-                        //垫付人的Apporver
-                        if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
-                        {
-                            DataRow dr = dtOnbehalf.NewRow();
-                            DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                            dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                            dr["FlowUser"] = drold["FlowUser"].ToString();
-                            dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                            dr["Fn"] = "Apporver";
-                            dr["PersonID"] = drold["UserID"].ToString();
-                            dtOnbehalf.Rows.Add(dr);
-                        }
-                        //垫付人的Issuer
-                        if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
-                        {
-                            DataRow dr = dtOnbehalf.NewRow();
-                            DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
-                            dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                            dr["FlowUser"] = drold["FlowUser"].ToString();
-                            dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                            dr["Fn"] = "Issuer";
-                            dr["PersonID"] = drold["UserID"].ToString();
-                            dtOnbehalf.Rows.Add(dr);
-                        }
+                        ////被垫付人的Verifier
+                        //if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count() >= 1)
+                        //{
+                        //    DataRow dr = dtOnbehalf.NewRow();
+                        //    DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count()) - 1];
+                        //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //    dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                        //    dr["Fn"] = "Verifier";
+                        //    dr["PersonID"] = drold["UserID"].ToString();
+                        //    dtOnbehalf.Rows.Add(dr);
+                        //}
+                        ////被垫付人的Apporver
+                        //if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                        //{
+                        //    int flowcount = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count();
+                        //    if (flowcount >= 2)
+                        //    {
+                        //        DataRow dr = dtOnbehalf.NewRow();
+                        //        DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 2];
+                        //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //        dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                        //        dr["Fn"] = "Apporver";
+                        //        dr["PersonID"] = drold["UserID"].ToString();
+                        //        dtOnbehalf.Rows.Add(dr);
+
+                        //        dr = dtOnbehalf.NewRow();
+                        //        drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                        //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //        dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                        //        dr["Fn"] = "Apporver";
+                        //        dr["PersonID"] = drold["UserID"].ToString();
+                        //        dtOnbehalf.Rows.Add(dr);
+                        //    }
+                        //    else
+                        //    {
+                        //        DataRow dr = dtOnbehalf.NewRow();
+                        //        DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                        //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //        dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                        //        dr["Fn"] = "Apporver";
+                        //        dr["PersonID"] = drold["UserID"].ToString();
+                        //        dtOnbehalf.Rows.Add(dr);
+                        //    }
+
+                        //}
+                        ////垫付人的Apporver
+                        //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                        //{
+                        //    DataRow dr = dtOnbehalf.NewRow();
+                        //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                        //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //    dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                        //    dr["Fn"] = "Apporver";
+                        //    dr["PersonID"] = drold["UserID"].ToString();
+                        //    dtOnbehalf.Rows.Add(dr);
+                        //}
+                        ////垫付人的Issuer
+                        //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
+                        //{
+                        //    DataRow dr = dtOnbehalf.NewRow();
+                        //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
+                        //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                        //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                        //    dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                        //    dr["Fn"] = "Issuer";
+                        //    dr["PersonID"] = drold["UserID"].ToString();
+                        //    dtOnbehalf.Rows.Add(dr);
+                        //}
                         
                         for (int j = 0; j < dtOnbehalf.Rows.Count; j++)
                         {
@@ -3606,6 +3812,12 @@ namespace eReimbursement
                 }
                 if (type == "ND")//保存并申请
                 {
+                    string onbehalfname = "";
+                    if (hdOnBehalf.Value != null && hdOnBehalf.Value.ToString() != "")
+                    {
+                        DataSet dsCon = DIMERCO.SDK.Utilities.LSDK.getUserProfilebyUserList(hdOnBehalf.Value.ToString());
+                        onbehalfname = dsCon.Tables[0].Rows[0]["fullName"].ToString();
+                    }
                     if (hdTravelRequestID.Value.ToString() != "")
                     {
                         if (LabelMonth.Text != DateTime.Now.Month.ToString() && DateTime.Now.Day > 5)
@@ -3644,6 +3856,7 @@ namespace eReimbursement
                             if (dsE.Tables[0].Rows.Count == 1)
                             {
                                 DataTable dtE = dsE.Tables[0];
+                                onbehalfname = dtE.Rows[0]["fullName"].ToString();
                                 updatesql += ",OnBehalfPersonName='" + dtE.Rows[0]["fullName"].ToString() + "'";
                                 updatesql += ",OnBehalfPersonUnit='" + dtE.Rows[0]["stationCode"].ToString() + "'";
                                 updatesql += ",OnBehalfPersonDept='" + dtE.Rows[0]["CRPDepartmentName"].ToString() + "'";
@@ -3671,17 +3884,32 @@ namespace eReimbursement
                             dtOnbehalf.Columns.Add("FlowUserid");
                             dtOnbehalf.Columns.Add("Fn");
                             dtOnbehalf.Columns.Add("PersonID");
+
+                            //160905垫付流程变更 2016090007E
+                            DataRow drConfirm = dtOnbehalf.NewRow();
+                            drConfirm["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            drConfirm["FlowUser"] = onbehalfname;
+                            drConfirm["FlowUserid"] = hdOnBehalf.Value.ToString();
+                            drConfirm["Fn"] = "Confirm";
+                            drConfirm["PersonID"] = hdOnBehalf.Value.ToString();
+                            dtOnbehalf.Rows.Add(drConfirm);
+
                             //被垫付人的Verifier
                             if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count() >= 1)
                             {
-                                DataRow dr = dtOnbehalf.NewRow();
+                                
                                 DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                dr["Fn"] = "Verifier";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
+
+                                if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                    dr["Fn"] = "Verifier";
+                                    dr["PersonID"] = drold["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
                             }
                             //被垫付人的Apporver
                             if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
@@ -3689,60 +3917,73 @@ namespace eReimbursement
                                 int flowcount = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count();
                                 if (flowcount >= 2)
                                 {
-                                    DataRow dr = dtOnbehalf.NewRow();
                                     DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 2];
-                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                    dr["FlowUser"] = drold["FlowUser"].ToString();
-                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                    dr["Fn"] = "Apporver";
-                                    dr["PersonID"] = drold["UserID"].ToString();
-                                    dtOnbehalf.Rows.Add(dr);
-
-                                    dr = dtOnbehalf.NewRow();
-                                    drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                    dr["FlowUser"] = drold["FlowUser"].ToString();
-                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                    dr["Fn"] = "Apporver";
-                                    dr["PersonID"] = drold["UserID"].ToString();
-                                    dtOnbehalf.Rows.Add(dr);
+                                    if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                    {
+                                        DataRow dr = dtOnbehalf.NewRow();
+                                        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                        dr["FlowUser"] = drold["FlowUser"].ToString();
+                                        dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                        dr["Fn"] = "Apporver";
+                                        dr["PersonID"] = drold["UserID"].ToString();
+                                        dtOnbehalf.Rows.Add(dr);
+                                    }
+                                    DataRow drold1 = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                                    if (dtOnbehalf.Select("FlowUserid='" + drold1["FlowUserID"].ToString() + "'").Count() < 1)
+                                    {
+                                        DataRow dr = dtOnbehalf.NewRow();
+                                        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                        dr["FlowUser"] = drold1["FlowUser"].ToString();
+                                        dr["FlowUserid"] = drold1["FlowUserID"].ToString();
+                                        dr["Fn"] = "Apporver";
+                                        dr["PersonID"] = drold1["UserID"].ToString();
+                                        dtOnbehalf.Rows.Add(dr);
+                                    }
                                 }
                                 else
                                 {
-                                    DataRow dr = dtOnbehalf.NewRow();
                                     DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                    dr["FlowUser"] = drold["FlowUser"].ToString();
-                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                    dr["Fn"] = "Apporver";
-                                    dr["PersonID"] = drold["UserID"].ToString();
-                                    dtOnbehalf.Rows.Add(dr);
+                                    if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                    {
+                                        DataRow dr = dtOnbehalf.NewRow();
+                                        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                        dr["FlowUser"] = drold["FlowUser"].ToString();
+                                        dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                        dr["Fn"] = "Apporver";
+                                        dr["PersonID"] = drold["UserID"].ToString();
+                                        dtOnbehalf.Rows.Add(dr);
+                                    }
                                 }
-
                             }
-                            //垫付人的Apporver
-                            if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
-                            {
-                                DataRow dr = dtOnbehalf.NewRow();
-                                DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                dr["Fn"] = "Apporver";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
-                            }
+                            //160905垫付流程变更 2016090007E
+                            ////垫付人的Apporver
+                            //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                            //{
+                            //    DataRow dr = dtOnbehalf.NewRow();
+                            //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                            //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                            //    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                            //    dr["Fn"] = "Apporver";
+                            //    dr["PersonID"] = drold["UserID"].ToString();
+                            //    dtOnbehalf.Rows.Add(dr);
+                            //}
                             //垫付人的Issuer
                             if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
                             {
-                                DataRow dr = dtOnbehalf.NewRow();
                                 DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserID"].ToString();
-                                dr["Fn"] = "Issuer";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
+                                if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                    dr["Fn"] = "Issuer";
+                                    dr["PersonID"] = drold["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
+                                
                             }
                             for (int j = 0; j < dtOnbehalf.Rows.Count; j++)
                             {
@@ -3891,17 +4132,31 @@ namespace eReimbursement
                             dtOnbehalf.Columns.Add("FlowUserid");
                             dtOnbehalf.Columns.Add("Fn");
                             dtOnbehalf.Columns.Add("PersonID");
+                            //160905垫付流程变更 2016090007E
+                            DataRow drConfirm = dtOnbehalf.NewRow();
+                            drConfirm["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            drConfirm["FlowUser"] = onbehalfname;
+                            drConfirm["FlowUserid"] = hdOnBehalf.Value.ToString();
+                            drConfirm["Fn"] = "Confirm";
+                            drConfirm["PersonID"] = hdOnBehalf.Value.ToString();
+                            dtOnbehalf.Rows.Add(drConfirm);
+
                             //被垫付人的Verifier
                             if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count() >= 1)
                             {
-                                DataRow dr = dtOnbehalf.NewRow();
+
                                 DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                dr["Fn"] = "Verifier";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
+
+                                if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                    dr["FlowUser"] = drold["FlowUser"].ToString();
+                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                    dr["Fn"] = "Verifier";
+                                    dr["PersonID"] = drold["UserID"].ToString();
+                                    dtOnbehalf.Rows.Add(dr);
+                                }
                             }
                             //被垫付人的Apporver
                             if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
@@ -3909,61 +4164,148 @@ namespace eReimbursement
                                 int flowcount = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count();
                                 if (flowcount >= 2)
                                 {
-                                    DataRow dr = dtOnbehalf.NewRow();
                                     DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 2];
-                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                    dr["FlowUser"] = drold["FlowUser"].ToString();
-                                    dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                    dr["Fn"] = "Apporver";
-                                    dr["PersonID"] = drold["UserID"].ToString();
-                                    dtOnbehalf.Rows.Add(dr);
-
-                                    dr = dtOnbehalf.NewRow();
-                                    drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                                    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                    dr["FlowUser"] = drold["FlowUser"].ToString();
-                                    dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                    dr["Fn"] = "Apporver";
-                                    dr["PersonID"] = drold["UserID"].ToString();
-                                    dtOnbehalf.Rows.Add(dr);
+                                    if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                    {
+                                        DataRow dr = dtOnbehalf.NewRow();
+                                        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                        dr["FlowUser"] = drold["FlowUser"].ToString();
+                                        dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                        dr["Fn"] = "Apporver";
+                                        dr["PersonID"] = drold["UserID"].ToString();
+                                        dtOnbehalf.Rows.Add(dr);
+                                    }
+                                    DataRow drold1 = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                                    if (dtOnbehalf.Select("FlowUserid='" + drold1["FlowUserID"].ToString() + "'").Count() < 1)
+                                    {
+                                        DataRow dr = dtOnbehalf.NewRow();
+                                        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                        dr["FlowUser"] = drold1["FlowUser"].ToString();
+                                        dr["FlowUserid"] = drold1["FlowUserID"].ToString();
+                                        dr["Fn"] = "Apporver";
+                                        dr["PersonID"] = drold1["UserID"].ToString();
+                                        dtOnbehalf.Rows.Add(dr);
+                                    }
                                 }
                                 else
                                 {
-                                    DataRow dr = dtOnbehalf.NewRow();
                                     DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                                    if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                    {
+                                        DataRow dr = dtOnbehalf.NewRow();
+                                        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                                        dr["FlowUser"] = drold["FlowUser"].ToString();
+                                        dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                        dr["Fn"] = "Apporver";
+                                        dr["PersonID"] = drold["UserID"].ToString();
+                                        dtOnbehalf.Rows.Add(dr);
+                                    }
+                                }
+                            }
+                            //160905垫付流程变更 2016090007E
+                            ////垫付人的Apporver
+                            //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                            //{
+                            //    DataRow dr = dtOnbehalf.NewRow();
+                            //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                            //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                            //    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                            //    dr["Fn"] = "Apporver";
+                            //    dr["PersonID"] = drold["UserID"].ToString();
+                            //    dtOnbehalf.Rows.Add(dr);
+                            //}
+                            //垫付人的Issuer
+                            if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
+                            {
+                                DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
+                                if (dtOnbehalf.Select("FlowUserid='" + drold["FlowUserID"].ToString() + "'").Count() < 1)
+                                {
+                                    DataRow dr = dtOnbehalf.NewRow();
+
                                     dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
                                     dr["FlowUser"] = drold["FlowUser"].ToString();
-                                    dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                    dr["Fn"] = "Apporver";
+                                    dr["FlowUserid"] = drold["FlowUserID"].ToString();
+                                    dr["Fn"] = "Issuer";
                                     dr["PersonID"] = drold["UserID"].ToString();
                                     dtOnbehalf.Rows.Add(dr);
                                 }
 
                             }
-                            //垫付人的Apporver
-                            if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
-                            {
-                                DataRow dr = dtOnbehalf.NewRow();
-                                DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                dr["Fn"] = "Apporver";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
-                            }
-                            //垫付人的Issuer
-                            if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
-                            {
-                                DataRow dr = dtOnbehalf.NewRow();
-                                DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
-                                dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
-                                dr["FlowUser"] = drold["FlowUser"].ToString();
-                                dr["FlowUserid"] = drold["FlowUserid"].ToString();
-                                dr["Fn"] = "Issuer";
-                                dr["PersonID"] = drold["UserID"].ToString();
-                                dtOnbehalf.Rows.Add(dr);
-                            }
+
+                            ////被垫付人的Verifier
+                            //if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count() >= 1)
+                            //{
+                            //    DataRow dr = dtOnbehalf.NewRow();
+                            //    DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and Fn='Verifier'").Count()) - 1];
+                            //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                            //    dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                            //    dr["Fn"] = "Verifier";
+                            //    dr["PersonID"] = drold["UserID"].ToString();
+                            //    dtOnbehalf.Rows.Add(dr);
+                            //}
+                            ////被垫付人的Apporver
+                            //if (dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                            //{
+                            //    int flowcount = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count();
+                            //    if (flowcount >= 2)
+                            //    {
+                            //        DataRow dr = dtOnbehalf.NewRow();
+                            //        DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 2];
+                            //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                            //        dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                            //        dr["Fn"] = "Apporver";
+                            //        dr["PersonID"] = drold["UserID"].ToString();
+                            //        dtOnbehalf.Rows.Add(dr);
+
+                            //        dr = dtOnbehalf.NewRow();
+                            //        drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                            //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                            //        dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                            //        dr["Fn"] = "Apporver";
+                            //        dr["PersonID"] = drold["UserID"].ToString();
+                            //        dtOnbehalf.Rows.Add(dr);
+                            //    }
+                            //    else
+                            //    {
+                            //        DataRow dr = dtOnbehalf.NewRow();
+                            //        DataRow drold = dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + onbehalfid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                            //        dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            //        dr["FlowUser"] = drold["FlowUser"].ToString();
+                            //        dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                            //        dr["Fn"] = "Apporver";
+                            //        dr["PersonID"] = drold["UserID"].ToString();
+                            //        dtOnbehalf.Rows.Add(dr);
+                            //    }
+
+                            //}
+                            ////垫付人的Apporver
+                            //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count() >= 1)
+                            //{
+                            //    DataRow dr = dtOnbehalf.NewRow();
+                            //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Apporver' or Fn is null)").Count()) - 1];
+                            //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                            //    dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                            //    dr["Fn"] = "Apporver";
+                            //    dr["PersonID"] = drold["UserID"].ToString();
+                            //    dtOnbehalf.Rows.Add(dr);
+                            //}
+                            ////垫付人的Issuer
+                            //if (dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count() >= 1)
+                            //{
+                            //    DataRow dr = dtOnbehalf.NewRow();
+                            //    DataRow drold = dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)")[(dtGroupFlowData.Select("UserID='" + personid + "' and (Fn='Issuer' or Fn is null)").Count()) - 1];
+                            //    dr["FlowNo"] = (dtOnbehalf.Rows.Count + 1).ToString();
+                            //    dr["FlowUser"] = drold["FlowUser"].ToString();
+                            //    dr["FlowUserid"] = drold["FlowUserid"].ToString();
+                            //    dr["Fn"] = "Issuer";
+                            //    dr["PersonID"] = drold["UserID"].ToString();
+                            //    dtOnbehalf.Rows.Add(dr);
+                            //}
 
                             for (int j = 0; j < dtOnbehalf.Rows.Count; j++)
                             {
@@ -4212,6 +4554,10 @@ namespace eReimbursement
                 {
                     msg = "Process Paying.";
                 }
+                else if (dtMail.Rows[0]["FlowFn"].ToString().ToLower() == "confirm")
+                {
+                    msg = "Seek For Your Confirmation.";
+                }
                 else
                 {
                     msg = "Seek For Your Approval.";
@@ -4236,7 +4582,16 @@ namespace eReimbursement
                     budget = "(UnBudgeted & Over-Budgeted)";
                 }
                 DIMERCO.SDK.MailMsg mail = new DIMERCO.SDK.MailMsg();
-                mail.Title = "Dimerco eReimbursement " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - " + msg;
+                
+                //16090007E 
+                if (dtMail.Rows[0]["OnBehalfPersonID"].ToString()!="")
+                {
+                    mail.Title = "Dimerco eReimbursement on behalf of " + dtMail.Rows[0]["OnBehalfPersonName"].ToString() + " " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - " + msg;
+                }
+                else
+                {
+                    mail.Title = "Dimerco eReimbursement " + budget + " " + dtMail.Rows[0]["Person"].ToString() + " - " + msg;
+                }
                 mail.FromDispName = "eReimbursement";
                 mail.From = "DIC2@dimerco.com";
 
@@ -4991,6 +5346,10 @@ namespace eReimbursement
                     else if (dtMail.Rows[i]["FlowFn"].ToString().ToLower() == "issuer")
                     {
                         msg1 = ". To Be Issued: " + dtMail.Rows[i]["Approver"].ToString() + "</div>";
+                    }
+                    else if (dtMail.Rows[i]["FlowFn"].ToString().ToLower() == "confirm")
+                    {
+                        msg1 = ". Waiting for Confirmation: " + dtMail.Rows[i]["Approver"].ToString() + "</div>";
                     }
                     else
                     {

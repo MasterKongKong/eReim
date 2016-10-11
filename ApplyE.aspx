@@ -666,7 +666,7 @@
                         Padding="10">
                         <Items>
                             <ext:ComboBox ID="cbxEType" runat="server" FieldLabel="<%$ Resources:LocalText,CustomerType%>"
-                                X="10" Y="10" Width="200" LabelWidth="90" ValueField="Code" DisplayField="Name"
+                                X="10" Y="10" Width="250" LabelWidth="90" ValueField="Code" DisplayField="Name"
                                 Editable="False">
                                 <Store>
                                     <ext:Store ID="StoreEType" runat="server">
@@ -689,7 +689,7 @@
                                 </Listeners>--%>
                             </ext:ComboBox>
                             <ext:TextField ID="txtEperson" runat="server" FieldLabel="<%$ Resources:LocalText,Guest%>"
-                                X="225" Y="10" Width="205" LabelWidth="60"  MaxLength="100"/>
+                                X="275" Y="10" Width="205" LabelWidth="60"  MaxLength="100"/>
                             <%--<ext:TextField ID="txtEcompany" runat="server" FieldLabel="客户" X="10" Y="40" Width="205"
                                 LabelWidth="60" Hidden="true" />--%>
                             <ext:ComboBox ID="cbxCustomer" runat="server" FieldLabel="<%$ Resources:LocalText,Customer%>"

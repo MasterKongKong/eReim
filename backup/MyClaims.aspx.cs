@@ -551,7 +551,7 @@ namespace eReimbursement
             if (dt != null && dt.Rows.Count > 0)
             {
                 string html = "";
-                string status1 = ""; string status2 = ""; string status3 = ""; string status4 = ""; string status5 = ""; string status6 = "";
+                string status1 = ""; string status2 = ""; string status3 = ""; string status4 = ""; string status5 = ""; string status6 = ""; string status7 = "";
                 if (Request.Cookies["lang"] != null && Request.Cookies["lang"].Value.ToLower() == "zh-cn")
                 {
                     status1 = "待提交";
@@ -560,6 +560,7 @@ namespace eReimbursement
                     status4 = "已批准";
                     status5 = "已拒绝";
                     status6 = "完成";
+                    status7 = "待确认";
                 }
                 else
                 {
@@ -569,6 +570,7 @@ namespace eReimbursement
                     status4 = "Approved.";
                     status5 = "Rejected by";
                     status6 = "Complete.";
+                    status7 = "Waiting for cfm.";
                 }
 
 
@@ -592,7 +594,7 @@ namespace eReimbursement
                         {
                             html += "<div class=\"StatusIcon StatusIcon0\">";
                             html += "<span class=\"spanIcon\">" + status2 + "<br />";
-                            html += dt.Rows[i]["CreadedBy"].ToString();
+                            html += dt.Rows[i]["Person"].ToString();
                             html += dt.Rows[i]["CreadedDate"].ToString() == "" ? "" : "<br />" + Convert.ToDateTime(dt.Rows[i]["CreadedDate"].ToString()).ToString("yyyy/MM/dd");
                             html += "</span><b class=\"bIcon bIcon1\"></b>";
                             html += "</div>";
@@ -622,6 +624,17 @@ namespace eReimbursement
                                 else
                                 {
                                     msg = "To be Issued by";
+                                }
+                            }
+                            else if (dt.Rows[i]["FlowFn"].ToString().ToLower() == "confirm")
+                            {
+                                if (Request.Cookies["lang"] != null && Request.Cookies["lang"].Value.ToLower() == "zh-cn")
+                                {
+                                    msg = "待确认.";
+                                }
+                                else
+                                {
+                                    msg = "Waiting for Confirmation by";
                                 }
                             }
                             else
@@ -666,6 +679,17 @@ namespace eReimbursement
                                 else
                                 {
                                     msg = "Issued by";
+                                }
+                            }
+                            else if (dt.Rows[i]["FlowFn"].ToString().ToLower() == "confirm")
+                            {
+                                if (Request.Cookies["lang"] != null && Request.Cookies["lang"].Value.ToLower() == "zh-cn")
+                                {
+                                    msg = "已确认.";
+                                }
+                                else
+                                {
+                                    msg = "Confirmed by";
                                 }
                             }
                             else

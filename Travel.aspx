@@ -1172,6 +1172,10 @@
                                             <Click Fn="GetCCList" />
                                         </Listeners>
                                     </ext:Button>
+                                    <ext:Button ID="Button4" runat="server" Text="Transfer to eFMS-Invoice Voucher Entry" X="530"
+                                        Y="690" Width="120" >
+                                        
+                                    </ext:Button>
                                     <ext:Label ID="labelInfo" runat="server" Text="" X="20" Y="720">
                                     </ext:Label>
                                 </Items>
